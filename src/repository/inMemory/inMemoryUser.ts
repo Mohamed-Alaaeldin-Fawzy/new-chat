@@ -1,38 +1,41 @@
 import { UserRepository } from "../userRepository";
-import { UserType } from "../types";
-export class InMemoryUser extends UserRepository {
-  private users: UserType[] = [];
-  constructor(user: UserType) {
-    super(user);
+import { User as UserModel } from "../../model/user";
+export class User extends UserRepository {
+  getAllUsers(): UserModel[] | Promise<UserModel[]> {
+    return this.users;
   }
 
-  register(): UserType {
-    try {
-      const user: UserType = {
-        name: this.user.name,
-        email: this.user.email,
-        password: this.user.password,
-      };
-      this.users.push(user);
-      return user;
-    } catch (error) {
-      throw error;
-    }
+  getUserById(id: string): UserModel | Promise<UserModel> {
+    return this.users.find((user) => user.getId() === id);
   }
 
-  delete(): void {
-    this.users = this.users.filter((user) => user.email !== this.user.email);
+  createUser(user: UserModel): UserModel | Promise<UserModel> {
+    this.users.push(user);
+    return user;
   }
 
-  login(): UserType {
-    try {
-      const user = this.users.find((user) => user.email === this.user.email);
-      if (this.user.password !== user?.password) {
-        throw new Error("Invalid credentials");
+  updateUser(id: string, newUser: UserModel): UserModel | Promise<UserModel> {
+    const newUsers = this.users.map((u) => {
+      if (u.getId() === id) {
+        return newUser;
       }
+      return u;
+    });
+    this.users = newUsers;
+    return newUser;
+  }
+
+  getUserByEmailAndPassword(
+    email: string,
+    password: string
+  ): UserModel | Promise<UserModel> {
+    const user = this.users.find((u) => u.getEmail() === email);
+    if ((user && user.getPassword()) === password) {
       return user;
-    } catch (error) {
-      throw error;
     }
+  }
+  deleteUser(id: string): void | Promise<void> {
+    const newUsers = this.users.filter((u) => u.getId() !== id);
+    this.users = newUsers;
   }
 }

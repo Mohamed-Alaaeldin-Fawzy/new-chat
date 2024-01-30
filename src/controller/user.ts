@@ -1,22 +1,26 @@
-import { UserType } from "repository/types";
+import { UserRepository } from "../repository/userRepository";
 import { User } from "../model/user";
 
 // ?? this Class is to make all the javascript pure logic unrelated to DB or Routes
 
 export class UserController {
-  async register(name: string, email: string, password: string) {
-    const newUser = new User({
-      name,
-      email,
-      password,
-    });
-    return await newUser.register();
+  constructor(public userRepository: UserRepository) {}
+  async register(user: User) {
+    return await this.userRepository.createUser(user);
   }
-
-  login(email: string, password: string) {
-    return new User({ email, password }).login();
+  async login(email: string, password: string) {
+    return await this.userRepository.getUserByEmailAndPassword(email, password);
   }
-  delete(user: UserType) {
-    return new User(user).delete();
+  async getUsers() {
+    return await this.userRepository.getAllUsers();
+  }
+  async getUserById(id: string) {
+    return await this.userRepository.getUserById(id);
+  }
+  async updateUser(id: string, user: User) {
+    return await this.userRepository.updateUser(id, user);
+  }
+  async deleteUser(id: string) {
+    this.userRepository.deleteUser(id);
   }
 }

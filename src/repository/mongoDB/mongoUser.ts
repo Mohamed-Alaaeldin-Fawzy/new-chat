@@ -1,44 +1,48 @@
 import { UserRepository } from "../userRepository";
-import { UserRepositoryType, UserType } from "../types";
 import { User as UserSchema } from "./mongooseSchema/User";
-import { ObjectId } from "mongodb";
-
-interface MongooseUserType extends UserRepositoryType {
-  _id: ObjectId;
-}
+import { ObjectId } from "mongoose";
+import { User as UserModel } from "../../model/user";
 
 export class MongoUser extends UserRepository {
-  constructor(user: UserType) {
-    super(user);
-    this.user = user;
-  }
-  public async register(): Promise<MongooseUserType> {
-    try {
-      const newUser = new UserSchema({
-        name: this.user.name,
-        email: this.user.email,
-        password: this.user.password,
-      });
-      await newUser.save();
-      return newUser.toJSON();
-    } catch (error) {
-      throw error;
-    }
+  async createUser(user: UserModel) {
+    const newUser = new UserSchema(user);
+    await newUser.save();
+    return user;
   }
 
-  public async login(): Promise<MongooseUserType> {
-    try {
-      const user = await UserSchema.findOne({
-        email: this.user.email,
-      });
+  async getAllUsers() {
+    const users = await UserSchema.find();
+    return users;
+  }
 
+  async getUserById(id: string) {
+    const user = await UserSchema.findById(id);
+    return user;
+  }
+
+  async getUserByEmailAndPassword(email: string, password: string) {
+    const user = await UserSchema.findOne({ email });
+    if (user && user.password === password) {
       return user;
-    } catch (error) {
-      throw error;
     }
   }
 
-  public delete(): void {
-    UserSchema.deleteOne({ email: this.user.email });
+  async updateUser(id: string, newUser: UserModel) {
+    const updatedUser = await UserSchema.findByIdAndUpdate(
+      id,
+      {
+        name: newUser.getName(),
+        email: newUser.getEmail(),
+        password: newUser.getPassword(),
+      },
+      {
+        new: true,
+      }
+    );
+    return updatedUser;
+  }
+
+  async deleteUser(id: string) {
+    await UserSchema.findByIdAndDelete(id);
   }
 }

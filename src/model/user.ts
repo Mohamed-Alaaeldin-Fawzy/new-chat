@@ -1,21 +1,43 @@
-import { MongoUser } from "../repository/mongoDB/mongoUser";
-import { InMemoryUser } from "../repository/inMemory/inMemoryUser"; /* Incase you wanted to change the DB all you need to do is import it and change one line */
-import { UserType } from "../repository/types";
+// attributes only
 
 export class User {
-  private userRepository;
-  constructor(user: UserType) {
-    this.userRepository = new MongoUser(
-      user as UserType
-    ); /* Incase you wanted to change the DB all you need to do change this line*/
+  public name?: string;
+  public email: string;
+  public password: string;
+  public id?: string;
+  public _id?: string;
+
+  getName(): string {
+    return this.name;
   }
-  async register() {
-    return await this.userRepository.register();
+  setName(name: string) {
+    this.name = name;
   }
-  login() {
-    return this.userRepository.login();
+  getEmail(): string {
+    return this.email;
   }
-  delete() {
-    return this.userRepository.delete();
+
+  setEmail(email: string) {
+    this.email = email;
+  }
+
+  setPassword(password: string) {
+    this.password = password;
+  }
+  getPassword(): string {
+    return this.password;
+  }
+  getId(): string {
+    return this.id;
+  }
+
+  setId(id: string) {
+    this.id = id;
+  }
+
+  get_id(): string {
+    return this._id;
   }
 }
+
+// router(controller(repository))

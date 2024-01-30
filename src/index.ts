@@ -5,8 +5,8 @@ import bodyParser from "body-parser";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import { router } from "./routes/index";
 import mongoose from "mongoose";
+import { router } from "./routes";
 // import { router } from './routes';
 
 dotenv.config();
@@ -43,3 +43,6 @@ mongoose.connection.on("error", (error) => {
 });
 
 app.use("/", router());
+
+// make an instance of userController and pass it to router
+// userController instance expects a repository
