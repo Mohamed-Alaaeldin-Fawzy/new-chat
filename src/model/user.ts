@@ -1,11 +1,28 @@
 // attributes only
 
 export class User {
-  public name?: string;
-  public email: string;
-  public password: string;
-  public id?: string;
-  public _id?: string;
+  name?: string;
+  email: string;
+  password: string;
+  id?: string;
+
+  constructor({
+    name,
+    email,
+    password,
+    id,
+  }: {
+    name?: string;
+    email: string;
+    password: string;
+    id?: string;
+    _id?: string;
+  }) {
+    this.name = name;
+    this.email = email;
+    this.password = password;
+    this.id = id;
+  }
 
   getName(): string {
     return this.name;
@@ -33,10 +50,6 @@ export class User {
 
   setId(id: string) {
     this.id = id;
-  }
-
-  get_id(): string {
-    return this._id;
   }
 }
 

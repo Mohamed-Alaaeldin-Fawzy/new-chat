@@ -6,9 +6,8 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { router } from "./routes";
-// import { router } from './routes';
-
+import { auth } from "./routes/auth";
+import { user } from "./routes/user";
 dotenv.config();
 
 const app = express();
@@ -42,7 +41,8 @@ mongoose.connection.on("error", (error) => {
   console.log(error);
 });
 
-app.use("/", router());
+app.use("/", auth());
+app.use("/", user());
 
 // make an instance of userController and pass it to router
 // userController instance expects a repository

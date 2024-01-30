@@ -5,12 +5,7 @@ import { User } from "../model/user";
 
 export class UserController {
   constructor(public userRepository: UserRepository) {}
-  async register(user: User) {
-    return await this.userRepository.createUser(user);
-  }
-  async login(email: string, password: string) {
-    return await this.userRepository.getUserByEmailAndPassword(email, password);
-  }
+
   async getUsers() {
     return await this.userRepository.getAllUsers();
   }
