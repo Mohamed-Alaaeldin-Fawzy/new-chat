@@ -5,9 +5,18 @@ import bodyParser from "body-parser";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
 import { auth } from "./routes/auth";
 import { user } from "./routes/user";
+import { chat } from "./routes/chat";
+import { message } from "./routes/message";
+import { InMemoryChatRepository } from "./repository/inMemory/inMemoryChat";
+import { ChatController } from "./controller/chat";
+import { User as InMemoryUser } from "./repository/inMemory/inMemoryUser";
+import { UserController } from "./controller/user";
+import { AuthController } from "./controller/auth";
+import { MessageController } from "./controller/message";
+import { InMemoryMessageRepository } from "./repository/inMemory/inMemoryMessage";
+
 dotenv.config();
 
 const app = express();
@@ -25,24 +34,19 @@ app.use(bodyParser.json());
 
 app.use(cookieParser());
 
-app.use(express.static("public"));
-
 const server = http.createServer(app);
 
 server.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
 });
 
-mongoose.Promise = Promise;
+app.use("/user", user(new UserController(new InMemoryUser())));
 
-mongoose.connect(process.env.MONGO_URL as string);
+app.use("/auth", auth(new AuthController(new InMemoryUser())));
 
-mongoose.connection.on("error", (error) => {
-  console.log(error);
-});
+app.use("/chat", chat(new ChatController(new InMemoryChatRepository())));
 
-app.use("/", auth());
-app.use("/", user());
-
-// make an instance of userController and pass it to router
-// userController instance expects a repository
+app.use(
+  "/message",
+  message(new MessageController(new InMemoryMessageRepository()))
+);

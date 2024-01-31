@@ -5,42 +5,45 @@ let users: UserModel[] = [];
 
 export class User extends UserRepository {
   async getAllUsers(): Promise<UserModel[]> {
-    return await users;
+    return users;
   }
 
   async getUserById(id: string): Promise<UserModel> {
-    return await users.find((user) => user.getId() === id);
+    return users.find((user) => user.id === id);
   }
 
   async createUser(user: UserModel): Promise<UserModel> {
     users.push(user);
-    console.log(users);
-    return await user;
+    return user;
   }
 
-  async updateUser(id: string, newUser: UserModel): Promise<UserModel> {
-    const newUsers = users.map((u) => {
-      if (u.getId() === id) {
-        return newUser;
-      }
-      return u;
-    });
-    users = newUsers;
-    return await newUser;
-  }
-
-  async getUserByEmailAndPassword(
-    email: string,
-    password: string
+  async updateUser(
+    id: string,
+    newUser: Partial<UserModel>
   ): Promise<UserModel> {
-    const user = users.find((u) => u.getEmail() === email);
-    if ((user && user.getPassword()) === password) {
-      return await user;
+    const userIndex = users.findIndex((user) => user.id === id);
+
+    if (userIndex !== -1) {
+      const updatedUser = { ...users[userIndex], ...newUser };
+      users[userIndex] = updatedUser;
+      return updatedUser;
+    }
+
+    return null;
+  }
+
+  async getUserByEmailAndHashedPassword(
+    email: string,
+    hashedPassword: string
+  ): Promise<UserModel> {
+    const user = users.find((u) => u.email === email);
+    if (user && user.password === hashedPassword) {
+      return user;
     }
   }
   async deleteUser(id: string): Promise<void> {
     {
-      const newUsers = users.filter((u) => u.getId() !== id);
+      const newUsers = users.filter((u) => u.id !== id);
       users = newUsers;
     }
   }

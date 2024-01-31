@@ -1,48 +1,51 @@
-// import { UserRepository } from "../userRepository";
-// import { User as UserSchema } from "./mongooseSchema/User";
-// import { ObjectId } from "mongoose";
-// import { User as UserModel } from "../../model/user";
+import { UserRepository } from "../userRepository";
+import { User as UserSchema } from "./mongooseSchema/User";
+import { ObjectId } from "mongoose";
+import { User as UserModel } from "../../model/user";
+import mongoose from "mongoose";
 
-// export class MongoUser extends UserRepository {
-//   async createUser(user: UserModel) {
-//     const newUser = new UserSchema(user);
-//     await newUser.save();
-//     return user;
-//   }
+const connect = async () => {
+  mongoose.Promise = Promise;
 
-//   async getAllUsers() {
-//     const users = await UserSchema.find();
-//     return users;
-//   }
+  mongoose.connect(process.env.MONGO_URL as string);
 
-//   async getUserById(id: string) {
-//     const user = await UserSchema.findById(id);
-//     return user;
-//   }
+  mongoose.connection.on("error", (error) => {
+    console.log(error);
+  });
+};
 
-//   async getUserByEmailAndPassword(email: string, password: string) {
-//     const user = await UserSchema.findOne({ email });
-//     if (user && user.password === password) {
-//       return user;
-//     }
-//   }
+export class MongoUser extends UserRepository {
+  constructor() {
+    super();
+    connect();
+  }
+  async createUser(user: UserModel) {
+    const newUser = new UserSchema(user);
+    await newUser.save();
+    return user;
+  }
 
-//   async updateUser(id: string, newUser: UserModel) {
-//     const updatedUser = await UserSchema.findByIdAndUpdate(
-//       id,
-//       {
-//         name: newUser.getName(),
-//         email: newUser.getEmail(),
-//         password: newUser.getPassword(),
-//       },
-//       {
-//         new: true,
-//       }
-//     );
-//     return updatedUser;
-//   }
+  async getAllUsers() {
+    const users = await UserSchema.find();
+    return users;
+  }
 
-//   async deleteUser(id: string) {
-//     await UserSchema.findByIdAndDelete(id);
-//   }
-// }
+  async getUserById(id: string): Promise<UserModel> {
+    return await UserSchema.findById(id);
+  }
+
+  async updateUser(id: string, newUser: UserModel): Promise<UserModel> {
+    return await UserSchema.findByIdAndUpdate(id, newUser, { new: true });
+  }
+
+  async getUserByEmailAndHashedPassword(
+    email: string,
+    hashedPassword: string
+  ): Promise<UserModel> {
+    return await UserSchema.findOne({ email, hashedPassword });
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await UserSchema.findByIdAndDelete(id);
+  }
+}

@@ -1,29 +1,29 @@
 import express from "express";
 import { User } from "../model/user";
 import { AuthController } from "../controller/auth";
-import { User as InMemoryUser } from "../repository/inMemory/inMemoryUser";
-const app = express();
 
-export const auth = () =>
-  app.post("/auth", async (req, res) => {
+export const router = express.Router();
+
+export const auth = (authController: AuthController) => {
+  router.post("/", async (req, res) => {
     try {
-      const { email, password, name } = req.body;
+      const { email, password, name, id } = req.body;
+      const user = new User({ name, email, password, id });
 
-      const userController = new AuthController(new InMemoryUser());
-
-      const user = new User({ name, email, password });
-
-      await userController.register(user);
+      await authController.register(user);
 
       res.status(201).json({
         success: true,
         user: {
-          name: user.getName(),
-          email: user.getEmail(),
+          name: user.name,
+          email: user.email,
         },
       });
     } catch (error) {
+      console.error("Registration error:", error);
       res.status(500).json({ success: false, error: "Internal Server Error" });
-      throw error;
     }
   });
+
+  return router;
+};
