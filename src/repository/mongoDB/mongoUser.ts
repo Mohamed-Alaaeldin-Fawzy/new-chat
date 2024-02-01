@@ -38,11 +38,11 @@ export class MongoUser extends UserRepository {
     return await UserSchema.findByIdAndUpdate(id, newUser, { new: true });
   }
 
-  async getUserByEmailAndHashedPassword(
+  async getUserByEmail(
     email: string,
-    hashedPassword: string
+  
   ): Promise<UserModel> {
-    return await UserSchema.findOne({ email, hashedPassword });
+    return await UserSchema.findOne({ email });
   }
 
   async deleteUser(id: string): Promise<void> {

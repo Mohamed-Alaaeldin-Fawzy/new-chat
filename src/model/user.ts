@@ -1,9 +1,9 @@
-// attributes only
+import { JwtPayload } from "jsonwebtoken";
 
 export class User {
   name?: string;
   email: string;
-  password: string;
+  password?: string;
   id?: string;
   // messages : Message[]
   constructor({

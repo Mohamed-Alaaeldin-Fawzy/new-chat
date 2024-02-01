@@ -5,7 +5,7 @@ import { AuthController } from "../controller/auth";
 export const router = express.Router();
 
 export const auth = (authController: AuthController) => {
-  router.post("/", async (req, res) => {
+  router.post("/register", async (req, res) => {
     try {
       const { email, password, name, id } = req.body;
       const user = new User({ name, email, password, id });
@@ -20,8 +20,24 @@ export const auth = (authController: AuthController) => {
         },
       });
     } catch (error) {
-      console.error("Registration error:", error);
-      res.status(500).json({ success: false, error: "Internal Server Error" });
+      res
+        .status(error.statusCode || 500)
+        .json({
+          success: false,
+          error: error.message || "Internal server error",
+        });
+    }
+  });
+
+  router.post("/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const { token } = await authController.login({ email, password });
+      res.status(200).json({ success: true, token });
+    } catch (error) {
+      res
+        .status(error.statusCode || 500)
+        .json({ success: false, error: error.message });
     }
   });
 

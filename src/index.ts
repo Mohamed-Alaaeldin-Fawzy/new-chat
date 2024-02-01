@@ -16,6 +16,7 @@ import { UserController } from "./controller/user";
 import { AuthController } from "./controller/auth";
 import { MessageController } from "./controller/message";
 import { InMemoryMessageRepository } from "./repository/inMemory/inMemoryMessage";
+import { isAuthenticated } from "./middleware";
 
 dotenv.config();
 
@@ -40,11 +41,17 @@ server.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
 });
 
-app.use("/user", user(new UserController(new InMemoryUser())));
+const userRepository = new InMemoryUser();
+const chatRepository = new InMemoryChatRepository();
+const chatController = new ChatController(chatRepository);
+const authController = new AuthController(userRepository);
+const userController = new UserController(userRepository);
 
-app.use("/auth", auth(new AuthController(new InMemoryUser())));
+app.use("/user", isAuthenticated, user(userController));
 
-app.use("/chat", chat(new ChatController(new InMemoryChatRepository())));
+app.use("/auth", auth(authController));
+
+app.use("/chat", isAuthenticated, chat(chatController));
 
 app.use(
   "/message",

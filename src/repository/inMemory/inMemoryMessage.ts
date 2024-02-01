@@ -1,20 +1,22 @@
 import { MessageRepository } from "../messageRepository";
 import { Message } from "../../model/messages";
-const messages: Message[] = [];
 export class InMemoryMessageRepository extends MessageRepository {
+  private messages: Message[] = [];
   async getMessages(): Promise<Message[]> {
-    return messages;
+    return this.messages;
   }
 
   async createMessage(message: Message): Promise<Message> {
-    messages.push(message);
+    this.messages.push(message);
     return message;
   }
 
   async deleteMessage(id: string): Promise<void> {
-    const messageIndex = messages.findIndex((message) => message.id === id);
+    const messageIndex = this.messages.findIndex(
+      (message) => message.id === id
+    );
     if (messageIndex !== -1) {
-      messages.splice(messageIndex, 1);
+      this.messages.splice(messageIndex, 1);
     }
   }
 }

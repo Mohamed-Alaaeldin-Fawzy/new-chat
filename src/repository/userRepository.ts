@@ -9,10 +9,7 @@ export abstract class UserRepository {
 
   abstract updateUser(id: string, newUser: UserModel): Promise<UserModel>;
 
-  abstract getUserByEmailAndHashedPassword(
-    email: string,
-    hashedPassword: string
-  ): Promise<UserModel>;
+  abstract getUserByEmail(email: string): Promise<UserModel>;
 
   abstract deleteUser(id: string): void;
 }
