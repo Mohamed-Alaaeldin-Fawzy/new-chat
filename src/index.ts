@@ -1,30 +1,34 @@
 import express from "express";
 import cors from "cors";
-import http from "http";
 import bodyParser from "body-parser";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import { auth } from "./routes/auth";
-import { user } from "./routes/user";
-import { chat } from "./routes/chat";
-import { message } from "./routes/message";
+import { authRouter } from "./routes/auth";
+import { userRouter } from "./routes/user";
+import { chatRouter } from "./routes/chat";
+import { messageRouter } from "./routes/message";
 import { InMemoryChatRepository } from "./repository/inMemory/inMemoryChat";
 import { ChatController } from "./controller/chat";
-import { User as InMemoryUser } from "./repository/inMemory/inMemoryUser";
+import { InMemoryUserRepository } from "./repository/inMemory/inMemoryUser";
 import { UserController } from "./controller/user";
 import { AuthController } from "./controller/auth";
 import { MessageController } from "./controller/message";
 import { InMemoryMessageRepository } from "./repository/inMemory/inMemoryMessage";
 import { isAuthenticated } from "./middleware";
-
+import { errorHandler } from "./util/errorHandler";
+import { connectToMongo } from "./DBConnection/mongoDBConnection";
 dotenv.config();
 
 const app = express();
 
+app.listen(process.env.PORT, () => {
+  console.log(`Server running on port ${process.env.PORT}`);
+});
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: `${process.env.HOST}:${process.env.PORT}`,
     credentials: true,
   })
 );
@@ -35,25 +39,29 @@ app.use(bodyParser.json());
 
 app.use(cookieParser());
 
-const server = http.createServer(app);
+if (process.env.DB === "MONGO") {
+  connectToMongo();
+} else {
+  console.log(`DB: ${process.env.DB}`);
+}
 
-server.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
-});
-
-const userRepository = new InMemoryUser();
+const userRepository = new InMemoryUserRepository();
 const chatRepository = new InMemoryChatRepository();
+const inMemoryMessageRepository = new InMemoryMessageRepository();
+
 const chatController = new ChatController(chatRepository);
 const authController = new AuthController(userRepository);
 const userController = new UserController(userRepository);
+const messageController = new MessageController(inMemoryMessageRepository);
 
-app.use("/user", isAuthenticated, user(userController));
+app.use("/auth", authRouter(authController));
 
-app.use("/auth", auth(authController));
+app.use(isAuthenticated);
 
-app.use("/chat", isAuthenticated, chat(chatController));
+app.use("/user", userRouter(userController));
 
-app.use(
-  "/message",
-  message(new MessageController(new InMemoryMessageRepository()))
-);
+app.use("/chat", chatRouter(chatController));
+
+app.use("/message", messageRouter(messageController));
+
+app.use(errorHandler);

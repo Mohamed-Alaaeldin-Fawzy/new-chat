@@ -1,21 +1,46 @@
 import { UserRepository } from "../repository/userRepository";
 import { User } from "../model/user";
-
-// ?? this Class is to make all the javascript pure logic unrelated to DB or Routes
+import { NotFoundError } from "../Error/notFoundError";
+import { BadRequestError } from "../Error/badRequestError";
 
 export class UserController {
   constructor(public userRepository: UserRepository) {}
 
   async getUsers() {
-    return await this.userRepository.getAllUsers();
+    const users = await this.userRepository.getAllUsers();
+    if (!users) {
+      throw new NotFoundError("No users found");
+    }
+    return users;
   }
+
   async getUserById(id: string) {
-    return await this.userRepository.getUserById(id);
+    const user = await this.userRepository.getUserById(id);
+
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+    return user;
   }
   async updateUser(id: string, user: User) {
-    return await this.userRepository.updateUser(id, user);
+    if (!user) {
+      throw new BadRequestError("please provide the update values");
+    }
+    const existingUser = await this.userRepository.getUserById(id);
+    if (!existingUser) {
+      throw new NotFoundError("User not found");
+    }
+    const newUser = await this.userRepository.updateUser(id, user);
+    if (!newUser) {
+      throw new BadRequestError("Error while updating user");
+    }
+    return newUser;
   }
   async deleteUser(id: string) {
+    const existingUser = await this.userRepository.getUserById(id);
+    if (!existingUser) {
+      throw new NotFoundError("User not found");
+    }
     this.userRepository.deleteUser(id);
   }
 }

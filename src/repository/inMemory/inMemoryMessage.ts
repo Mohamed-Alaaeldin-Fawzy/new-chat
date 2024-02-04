@@ -2,8 +2,8 @@ import { MessageRepository } from "../messageRepository";
 import { Message } from "../../model/messages";
 export class InMemoryMessageRepository extends MessageRepository {
   private messages: Message[] = [];
-  async getMessages(): Promise<Message[]> {
-    return this.messages;
+  async getMessagesByChatId(chatId: string): Promise<Message[]> {
+    return this.messages.filter((message) => message.getChatId() === chatId);
   }
 
   async createMessage(message: Message): Promise<Message> {
@@ -12,11 +12,12 @@ export class InMemoryMessageRepository extends MessageRepository {
   }
 
   async deleteMessage(id: string): Promise<void> {
-    const messageIndex = this.messages.findIndex(
-      (message) => message.id === id
+    const newMessages = this.messages.filter(
+      (message) => message.getId() !== id
     );
-    if (messageIndex !== -1) {
-      this.messages.splice(messageIndex, 1);
-    }
+    this.messages = newMessages;
+  }
+  async getMessageById(id: string): Promise<Message> {
+    return this.messages.find((message) => message.getId() === id);
   }
 }

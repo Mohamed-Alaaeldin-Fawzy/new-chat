@@ -1,48 +1,58 @@
 import { UserRepository } from "../userRepository";
-import { User as UserModel } from "../../model/user";
+import { User } from "../../model/user";
 
-export class User extends UserRepository {
-  private users: UserModel[] = [];
+export class InMemoryUserRepository extends UserRepository {
+  private users: User[] = [];
 
-  async getAllUsers(): Promise<UserModel[]> {
-    const usersToBeReturned = this.users.map((user) => {
-      return { name: user.name, email: user.email };
+  async getAllUsers(): Promise<Object[]> {
+    const users = this.users.map((user) => {
+      return {
+        name: user.getName(),
+        email: user.getEmail(),
+      };
     });
-    return usersToBeReturned;
+    return users;
   }
 
-  async getUserById(id: string): Promise<UserModel> {
-    return this.users.find((user) => user.id === id);
+  async getUserById(id: string): Promise<User> {
+    return this.users.find((user) => user.getId() === id);
   }
 
-  async createUser(user: UserModel): Promise<UserModel> {
+  async createUser(user: User): Promise<User> {
     this.users.push(user);
     return user;
   }
 
-  async updateUser(
-    id: string,
-    newUser: Partial<UserModel>
-  ): Promise<UserModel> {
-    const userIndex = this.users.findIndex((user) => user.id === id);
+  async updateUser(id: string, updatedUser: Partial<User>): Promise<User> {
+    // Find the user based on the provided ID
+    const userToUpdate = this.users.find((user) => user.getId() === id);
 
-    if (userIndex !== -1) {
-      const updatedUser = { ...this.users[userIndex], ...newUser };
-      this.users[userIndex] = updatedUser;
-      return updatedUser;
+    // If the user is not found, return null
+    if (!userToUpdate) {
+      return null;
     }
 
-    return null;
+    // Update the user properties with the provided values
+    if (updatedUser.getName() !== undefined) {
+      userToUpdate.setName(updatedUser.getName());
+    }
+    if (updatedUser.getEmail() !== undefined) {
+      userToUpdate.setEmail(updatedUser.getEmail());
+    }
+    if (updatedUser.getPassword() !== undefined) {
+      userToUpdate.setPassword(updatedUser.getPassword());
+    }
+
+    // Return the updated user
+    return userToUpdate;
   }
 
-  async getUserByEmail(email: string): Promise<UserModel> {
-    const user = this.users.find((u) => u.email === email);
+  async getUserByEmail(email: string): Promise<User> {
+    const user = this.users.find((u) => u.getEmail() === email);
     return user;
   }
   async deleteUser(id: string): Promise<void> {
-    {
-      const newUsers = this.users.filter((u) => u.id !== id);
-      this.users = newUsers;
-    }
+    const newUsers = this.users.filter((u) => u.getId() !== id);
+    this.users = newUsers;
   }
 }

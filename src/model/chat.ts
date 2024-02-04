@@ -1,19 +1,36 @@
-import { Types } from "mongoose";
-import { Message } from "../model/messages";
 export class Chat {
-  name: string;
-  messages: Message[];
-  usersIds: Types.ObjectId[] | string[];
-  id: string | Types.ObjectId;
-  constructor(
-    name: string,
-    messages: Message[],
-    usersIds: Types.ObjectId[] | string[],
-    id: string | Types.ObjectId
-  ) {
+  private name: string;
+  private usersIds: string[];
+  private id?: string;
+  constructor({
+    name,
+    usersIds,
+    id,
+  }: {
+    name: string;
+    usersIds: string[];
+    id?: string;
+  }) {
     this.name = name;
-    this.messages = messages;
     this.usersIds = usersIds;
     this.id = id;
   }
+  getName = () => {
+    return this.name;
+  };
+  getUsersIds = () => {
+    return this.usersIds;
+  };
+  getId = () => {
+    return this.id;
+  };
+  setName = (name: string) => {
+    this.name = name;
+  };
+  setUsersIds = (usersIds: string[]) => {
+    this.usersIds = usersIds;
+  };
+  setId = (id: string) => {
+    this.id = id;
+  };
 }

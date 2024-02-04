@@ -25,7 +25,8 @@ export function isAuthenticated(
       return res.status(401).json({ message: "Unauthorized - Invalid token" });
     }
 
-    req.user = decoded as any;
+    req.user = decoded as Object;
+    req.app.locals.user = decoded as Object;
     next();
   });
 }

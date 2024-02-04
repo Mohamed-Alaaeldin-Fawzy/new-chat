@@ -1,25 +1,9 @@
 import { UserRepository } from "../userRepository";
 import { User as UserSchema } from "./mongooseSchema/User";
-import { ObjectId } from "mongoose";
-import { User as UserModel } from "../../model/user";
-import mongoose from "mongoose";
+import { User } from "../../model/user";
 
-const connect = async () => {
-  mongoose.Promise = Promise;
-
-  mongoose.connect(process.env.MONGO_URL as string);
-
-  mongoose.connection.on("error", (error) => {
-    console.log(error);
-  });
-};
-
-export class MongoUser extends UserRepository {
-  constructor() {
-    super();
-    connect();
-  }
-  async createUser(user: UserModel) {
+export class MongoUserRepository extends UserRepository {
+  async createUser(user: User) {
     const newUser = new UserSchema(user);
     await newUser.save();
     return user;
@@ -30,18 +14,17 @@ export class MongoUser extends UserRepository {
     return users;
   }
 
-  async getUserById(id: string): Promise<UserModel> {
+  async getUserById(id: string): Promise<User> {
     return await UserSchema.findById(id);
   }
 
-  async updateUser(id: string, newUser: UserModel): Promise<UserModel> {
-    return await UserSchema.findByIdAndUpdate(id, newUser, { new: true });
+  async updateUser(id: string, newUser: Partial<User>): Promise<User> {
+    const user = await UserSchema.findByIdAndUpdate(id, newUser, { new: true });
+    const transformedUser = new User(user);
+    return transformedUser;
   }
 
-  async getUserByEmail(
-    email: string,
-  
-  ): Promise<UserModel> {
+  async getUserByEmail(email: string): Promise<User> {
     return await UserSchema.findOne({ email });
   }
 

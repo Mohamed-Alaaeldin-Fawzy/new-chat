@@ -1,6 +1,6 @@
 import { ChatRepository } from "../chatRepository";
 import { Chat } from "../../model/chat";
-import { Types } from "mongoose";
+
 export class InMemoryChatRepository extends ChatRepository {
   private chats: Chat[] = [];
 
@@ -9,16 +9,22 @@ export class InMemoryChatRepository extends ChatRepository {
     return chat;
   }
 
-  async getChats(): Promise<Chat[]> {
-    return this.chats;
+  async getChatsByUserId(id: string): Promise<Chat[]> {
+    const userChats = this.chats.filter((chat) =>
+      chat.getUsersIds().includes(id)
+    );
+    return userChats;
   }
 
-  async updateChat(id: string | Types.ObjectId, chat: Chat): Promise<Chat> {
-    const chatIndex = this.chats.findIndex((chat) => chat.id === id);
+  async updateChat(id: string, chat: Chat): Promise<Chat> {
+    const chatIndex = this.chats.findIndex((chat) => chat.getId() === id);
     if (chatIndex !== -1) {
       this.chats[chatIndex] = chat;
       return chat;
     }
     return null;
+  }
+  async getChatById(id: string): Promise<Chat> {
+    return this.chats.find((chat) => chat.getId() === id);
   }
 }
