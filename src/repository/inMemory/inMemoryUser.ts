@@ -1,47 +1,58 @@
 import { UserRepository } from "../userRepository";
-import { User as UserModel } from "../../model/user";
+import { User } from "../../model/user";
 
-let users: UserModel[] = [];
+export class InMemoryUserRepository extends UserRepository {
+  private users: User[] = [];
 
-export class User extends UserRepository {
-  async getAllUsers(): Promise<UserModel[]> {
-    return await users;
-  }
-
-  async getUserById(id: string): Promise<UserModel> {
-    return await users.find((user) => user.getId() === id);
-  }
-
-  async createUser(user: UserModel): Promise<UserModel> {
-    users.push(user);
-    console.log(users);
-    return await user;
-  }
-
-  async updateUser(id: string, newUser: UserModel): Promise<UserModel> {
-    const newUsers = users.map((u) => {
-      if (u.getId() === id) {
-        return newUser;
-      }
-      return u;
+  async getAllUsers(): Promise<Object[]> {
+    const users = this.users.map((user) => {
+      return {
+        name: user.getName(),
+        email: user.getEmail(),
+      };
     });
-    users = newUsers;
-    return await newUser;
+    return users;
   }
 
-  async getUserByEmailAndPassword(
-    email: string,
-    password: string
-  ): Promise<UserModel> {
-    const user = users.find((u) => u.getEmail() === email);
-    if ((user && user.getPassword()) === password) {
-      return await user;
+  async getUserById(id: string): Promise<User> {
+    return this.users.find((user) => user.getId() === id);
+  }
+
+  async createUser(user: User): Promise<User> {
+    this.users.push(user);
+    return user;
+  }
+
+  async updateUser(id: string, updatedUser: Partial<User>): Promise<User> {
+    // Find the user based on the provided ID
+    const userToUpdate = this.users.find((user) => user.getId() === id);
+
+    // If the user is not found, return null
+    if (!userToUpdate) {
+      return null;
     }
+
+    // Update the user properties with the provided values
+    if (updatedUser.getName() !== undefined) {
+      userToUpdate.setName(updatedUser.getName());
+    }
+    if (updatedUser.getEmail() !== undefined) {
+      userToUpdate.setEmail(updatedUser.getEmail());
+    }
+    if (updatedUser.getPassword() !== undefined) {
+      userToUpdate.setPassword(updatedUser.getPassword());
+    }
+
+    // Return the updated user
+    return userToUpdate;
+  }
+
+  async getUserByEmail(email: string): Promise<User> {
+    const user = this.users.find((u) => u.getEmail() === email);
+    return user;
   }
   async deleteUser(id: string): Promise<void> {
-    {
-      const newUsers = users.filter((u) => u.getId() !== id);
-      users = newUsers;
-    }
+    const newUsers = this.users.filter((u) => u.getId() !== id);
+    this.users = newUsers;
   }
 }

@@ -1,20 +1,35 @@
 import express from "express";
 import cors from "cors";
-import http from "http";
 import bodyParser from "body-parser";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
-import { auth } from "./routes/auth";
-import { user } from "./routes/user";
+import { authRouter } from "./routes/auth";
+import { userRouter } from "./routes/user";
+import { chatRouter } from "./routes/chat";
+import { messageRouter } from "./routes/message";
+import { InMemoryChatRepository } from "./repository/inMemory/inMemoryChat";
+import { ChatController } from "./controller/chat";
+import { InMemoryUserRepository } from "./repository/inMemory/inMemoryUser";
+import { UserController } from "./controller/user";
+import { AuthController } from "./controller/auth";
+import { MessageController } from "./controller/message";
+import { InMemoryMessageRepository } from "./repository/inMemory/inMemoryMessage";
+import { isAuthenticated } from "./middleware";
+import { errorHandler } from "./util/errorHandler";
+import { connectToMongo } from "./DBConnection/mongoDBConnection";
+
 dotenv.config();
 
 const app = express();
 
+app.listen(process.env.PORT, () => {
+  console.log(`Server running on port ${process.env.PORT}`);
+});
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: `${process.env.HOST}:${process.env.PORT}`,
     credentials: true,
   })
 );
@@ -25,24 +40,29 @@ app.use(bodyParser.json());
 
 app.use(cookieParser());
 
-app.use(express.static("public"));
+if (process.env.DB === "MONGO") {
+  connectToMongo();
+} else {
+  console.log(`DB: ${process.env.DB}`);
+}
 
-const server = http.createServer(app);
+const userRepository = new InMemoryUserRepository();
+const chatRepository = new InMemoryChatRepository();
+const inMemoryMessageRepository = new InMemoryMessageRepository();
 
-server.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
-});
+const chatController = new ChatController(chatRepository);
+const authController = new AuthController(userRepository);
+const userController = new UserController(userRepository);
+const messageController = new MessageController(inMemoryMessageRepository);
 
-mongoose.Promise = Promise;
+app.use("/auth", authRouter(authController));
 
-mongoose.connect(process.env.MONGO_URL as string);
+app.use(isAuthenticated);
 
-mongoose.connection.on("error", (error) => {
-  console.log(error);
-});
+app.use("/user", userRouter(userController));
 
-app.use("/", auth());
-app.use("/", user());
+app.use("/chat", chatRouter(chatController));
 
-// make an instance of userController and pass it to router
-// userController instance expects a repository
+app.use("/message", messageRouter(messageController));
+
+app.use(errorHandler);

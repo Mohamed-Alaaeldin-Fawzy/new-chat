@@ -1,11 +1,8 @@
-// attributes only
-
 export class User {
-  name?: string;
-  email: string;
-  password: string;
-  id?: string;
-
+  private name?: string;
+  private email: string;
+  private password?: string;
+  private id?: string;
   constructor({
     name,
     email,
@@ -16,41 +13,34 @@ export class User {
     email: string;
     password: string;
     id?: string;
-    _id?: string;
   }) {
     this.name = name;
     this.email = email;
     this.password = password;
     this.id = id;
   }
-
-  getName(): string {
+  getName = () => {
     return this.name;
-  }
-  setName(name: string) {
-    this.name = name;
-  }
-  getEmail(): string {
-    return this.email;
-  }
-
-  setEmail(email: string) {
-    this.email = email;
-  }
-
-  setPassword(password: string) {
-    this.password = password;
-  }
-  getPassword(): string {
+  };
+  getPassword = () => {
     return this.password;
-  }
-  getId(): string {
+  };
+  getEmail = () => {
+    return this.email;
+  };
+  getId = () => {
     return this.id;
-  }
-
-  setId(id: string) {
+  };
+  setName = (name: string) => {
+    this.name = name;
+  };
+  setPassword = (password: string) => {
+    this.password = password;
+  };
+  setEmail = (email: string) => {
+    this.email = email;
+  };
+  setId = (id: string) => {
     this.id = id;
-  }
+  };
 }
-
-// router(controller(repository))

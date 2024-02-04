@@ -1,20 +1,16 @@
 import express from "express";
 import { User } from "../model/user";
 import { AuthController } from "../controller/auth";
-import { User as InMemoryUser } from "../repository/inMemory/inMemoryUser";
-const app = express();
 
-export const auth = () =>
-  app.post("/auth", async (req, res) => {
+export const router = express.Router();
+
+export const authRouter = (authController: AuthController) => {
+  router.post("/register", async (req, res, next) => {
     try {
       const { email, password, name } = req.body;
-
-      const userController = new AuthController(new InMemoryUser());
-
       const user = new User({ name, email, password });
 
-      await userController.register(user);
-
+      await authController.register(user);
       res.status(201).json({
         success: true,
         user: {
@@ -23,7 +19,19 @@ export const auth = () =>
         },
       });
     } catch (error) {
-      res.status(500).json({ success: false, error: "Internal Server Error" });
-      throw error;
+      next(error);
     }
   });
+
+  router.post("/login", async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+      const { token } = await authController.login({ email, password });
+      res.status(200).json({ success: true, token });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  return router;
+};
