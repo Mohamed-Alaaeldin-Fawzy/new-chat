@@ -18,6 +18,7 @@ import { InMemoryMessageRepository } from "./repository/inMemory/inMemoryMessage
 import { isAuthenticated } from "./middleware";
 import { errorHandler } from "./util/errorHandler";
 import { connectToMongo } from "./DBConnection/mongoDBConnection";
+
 dotenv.config();
 
 const app = express();
