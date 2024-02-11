@@ -20,6 +20,8 @@ export function isAuthenticated(
       .json({ message: "Unauthorized - Please provide a token" });
   }
 
+  // check if password is correct
+
   jwt.verify(token, jwtSecret, (err, decoded) => {
     if (err) {
       return res.status(401).json({ message: "Unauthorized - Invalid token" });

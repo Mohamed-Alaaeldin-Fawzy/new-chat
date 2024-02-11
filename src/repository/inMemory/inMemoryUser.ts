@@ -32,6 +32,7 @@ export class InMemoryUserRepository extends UserRepository {
       return null;
     }
 
+    // use Es6 spread operator to update the user properties
     // Update the user properties with the provided values
     if (updatedUser.getName() !== undefined) {
       userToUpdate.setName(updatedUser.getName());

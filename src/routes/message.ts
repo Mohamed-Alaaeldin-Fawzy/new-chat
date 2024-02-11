@@ -6,8 +6,9 @@ const router = express.Router();
 export const messageRouter = (messageController: MessageController) => {
   router.get("/:chatId", async (req, res, next) => {
     try {
+      const { chatId } = req.params;
       const messages = await messageController.getMessagesByChatId(
-        req.params.chatId
+        chatId.toString()
       );
       res.status(200).json(messages);
     } catch (error) {

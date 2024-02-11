@@ -27,12 +27,7 @@ app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
 });
 
-app.use(
-  cors({
-    origin: `${process.env.HOST}:${process.env.PORT}`,
-    credentials: true,
-  })
-);
+app.use(cors());
 
 app.use(compression());
 
@@ -61,8 +56,8 @@ app.use(isAuthenticated);
 
 app.use("/user", userRouter(userController));
 
-app.use("/chat", chatRouter(chatController));
+app.use("/chats", chatRouter(chatController));
 
-app.use("/message", messageRouter(messageController));
+app.use("/messages", messageRouter(messageController));
 
 app.use(errorHandler);

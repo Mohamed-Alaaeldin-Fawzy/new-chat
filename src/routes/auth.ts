@@ -11,12 +11,14 @@ export const authRouter = (authController: AuthController) => {
       const user = new User({ name, email, password });
 
       await authController.register(user);
+      const { token } = await authController.login({ email, password });
       res.status(201).json({
         success: true,
         user: {
           name: user.getName(),
           email: user.getEmail(),
         },
+        token,
       });
     } catch (error) {
       next(error);
@@ -32,6 +34,5 @@ export const authRouter = (authController: AuthController) => {
       next(error);
     }
   });
-
   return router;
 };
