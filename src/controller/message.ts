@@ -2,6 +2,7 @@ import { Message } from "../model/messages";
 import { MessageRepository } from "../repository/messageRepository";
 import { NotFoundError } from "../Error/notFoundError";
 import { BadRequestError } from "../Error/badRequestError";
+import { generateRandomNumber } from "../util/getRandomNumber";
 
 export class MessageController {
   constructor(public messageRepository: MessageRepository) {}
@@ -10,6 +11,7 @@ export class MessageController {
     if (!message) {
       throw new BadRequestError("Please provide a message");
     }
+    message.setId(generateRandomNumber(10));
     const NewMessage = this.messageRepository.createMessage(message);
     if (!NewMessage) {
       throw new BadRequestError("Error while creating message");

@@ -24,10 +24,7 @@ export class AuthController {
     }
     const hashedPassword = await bcrypt.hash(user.getPassword(), 10);
     user.setPassword(hashedPassword);
-
-    if (!user.getId()) {
-      user.setId(generateRandomNumber(10));
-    }
+    user.setId(generateRandomNumber(10));
     return await this.userRepository.createUser(user);
   }
 

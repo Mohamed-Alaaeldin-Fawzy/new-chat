@@ -9,6 +9,7 @@ export class InMemoryUserRepository extends UserRepository {
       return {
         name: user.getName(),
         email: user.getEmail(),
+        id: user.getId(),
       };
     });
     return users;

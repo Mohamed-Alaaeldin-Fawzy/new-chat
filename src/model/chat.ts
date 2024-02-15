@@ -15,6 +15,7 @@ export class Chat {
     this.usersIds = usersIds;
     this.id = id;
   }
+
   getName = () => {
     return this.name;
   };

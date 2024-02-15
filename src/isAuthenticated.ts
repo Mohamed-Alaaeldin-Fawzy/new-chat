@@ -12,7 +12,9 @@ export function isAuthenticated(
   res: Response,
   next: NextFunction
 ) {
-  const token = req.headers.authorization;
+  const authHeaders = req.headers.authorization;
+
+  const token = authHeaders && authHeaders.split(" ")[1];
 
   if (!token) {
     return res

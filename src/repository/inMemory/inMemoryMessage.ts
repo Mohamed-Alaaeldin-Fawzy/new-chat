@@ -3,8 +3,10 @@ import { Message } from "../../model/messages";
 export class InMemoryMessageRepository extends MessageRepository {
   private messages: Message[] = [];
   async getMessagesByChatId(chatId: string): Promise<Message[]> {
-    console.log("chatId:", chatId);
-    return this.messages.filter((message) => message.getChatId() === chatId);
+    const messages = this.messages.filter(
+      (message) => message.getChatId() === chatId
+    );
+    return messages;
   }
 
   async createMessage(message: Message): Promise<Message> {

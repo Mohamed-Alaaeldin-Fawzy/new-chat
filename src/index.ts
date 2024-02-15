@@ -15,7 +15,7 @@ import { UserController } from "./controller/user";
 import { AuthController } from "./controller/auth";
 import { MessageController } from "./controller/message";
 import { InMemoryMessageRepository } from "./repository/inMemory/inMemoryMessage";
-import { isAuthenticated } from "./middleware";
+import { isAuthenticated } from "./isAuthenticated";
 import { errorHandler } from "./util/errorHandler";
 import { connectToMongo } from "./DBConnection/mongoDBConnection";
 

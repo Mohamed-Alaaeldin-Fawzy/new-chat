@@ -2,6 +2,7 @@ import { ChatRepository } from "../repository/chatRepository";
 import { Chat } from "../model/chat";
 import { NotFoundError } from "../Error/notFoundError";
 import { BadRequestError } from "../Error/badRequestError";
+import { generateRandomNumber } from "../util/getRandomNumber";
 
 export class ChatController {
   constructor(public chatRepository: ChatRepository) {}
@@ -15,13 +16,16 @@ export class ChatController {
   }
 
   async createChat(chat: Chat) {
-    if (!chat) {
+    if (!chat.getName() || !chat.getUsersIds()) {
       throw new BadRequestError("Please provide a chat");
     }
-    const NewChat = this.chatRepository.createChat(chat);
+    chat.setId(generateRandomNumber(10));
+
+    const NewChat = await this.chatRepository.createChat(chat);
     if (!NewChat) {
       throw new BadRequestError("Error while creating chat");
     }
+
     return NewChat;
   }
 
