@@ -1,7 +1,7 @@
 import { User } from "../models/user";
 
 export abstract class UserRepository {
-  abstract getAllUsers(): Promise<User[]>;
+  abstract getAllUsers(): Promise<Object[]>;
 
   abstract getUserById(id: string): Promise<User>;
 

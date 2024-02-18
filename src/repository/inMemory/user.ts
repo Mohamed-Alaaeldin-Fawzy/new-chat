@@ -26,7 +26,9 @@ export class InMemoryUserRepository extends UserRepository {
   }
 
   async createUser(user: User): Promise<User> {
-    user.setId(generateRandomNumber(10));
+    if (!user.getId()) {
+      user.setId(generateRandomNumber(10));
+    }
     this.users.push(user);
     return user;
   }

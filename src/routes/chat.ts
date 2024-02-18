@@ -7,9 +7,9 @@ const router = express.Router();
 
 export const chatRouter = (chatController: ChatController) => {
   router.get(
-    "/:userId",
+    "/",
     asyncErrorHandler(async (req, res, next) => {
-      const userId = req.params.id;
+      const userId = req.app.locals.userId;
       const chats = await chatController.getChatsByUserId(userId);
       res.status(200).json(chats);
     })

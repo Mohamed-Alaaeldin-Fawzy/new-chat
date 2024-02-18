@@ -17,6 +17,7 @@ import { MessageController } from "./controllers/message";
 import { InMemoryMessageRepository } from "./repository/inMemory/message";
 import { isAuthenticated } from "./middlewares/isAuthenticated";
 import { errorHandler } from "./middlewares/errorHandler";
+import { dataSeed } from "../dataSeed";
 // import { connectToMongo } from "./DBConnection/mongoDBConnection";
 
 dotenv.config();
@@ -45,6 +46,8 @@ const chatController = new ChatController(chatRepository);
 const authController = new AuthController(userRepository);
 const userController = new UserController(userRepository);
 const messageController = new MessageController(messageRepository);
+
+dataSeed(userRepository, chatRepository, messageRepository);
 
 app.use("/", authRouter(authController));
 

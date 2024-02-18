@@ -6,7 +6,9 @@ export class InMemoryChatRepository extends ChatRepository {
   private chats: Chat[] = [];
 
   async createChat(chat: Chat): Promise<Chat> {
-    chat.setId(generateRandomNumber(10));
+    if (!chat.getId()) {
+      chat.setId(generateRandomNumber(10));
+    }
     this.chats.push(chat);
     return chat;
   }
@@ -15,6 +17,9 @@ export class InMemoryChatRepository extends ChatRepository {
     const userChats = this.chats.filter((chat) =>
       chat.getUsersIds().includes(id)
     );
+    if (userChats.length === 0) {
+      throw new NotFoundError("chat not found");
+    }
     return userChats;
   }
 

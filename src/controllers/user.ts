@@ -6,7 +6,7 @@ import { BadRequestError } from "../Error/badRequestError";
 export class UserController {
   constructor(public userRepository: UserRepository) {}
 
-  async getUsers(): Promise<User[]> {
+  async getUsers(): Promise<Object[]> {
     const users = await this.userRepository.getAllUsers();
     return users;
   }

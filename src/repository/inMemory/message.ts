@@ -12,7 +12,9 @@ export class InMemoryMessageRepository extends MessageRepository {
   }
 
   async createMessage(message: Message): Promise<Message> {
-    message.setId(generateRandomNumber(10));
+    if (!message.getId()) {
+      message.setId(generateRandomNumber(10));
+    }
     this.messages.push(message);
     return message;
   }
