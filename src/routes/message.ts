@@ -1,6 +1,6 @@
 import express from "express";
-import { MessageController } from "../controller/message";
-import { Message } from "../model/messages";
+import { MessageController } from "../controllers/message";
+import { Message } from "../models/messages";
 import { asyncErrorHandler } from "../util/asyncErrorHandler";
 
 const router = express.Router();
@@ -10,9 +10,7 @@ export const messageRouter = (messageController: MessageController) => {
     "/:chatId",
     asyncErrorHandler(async (req, res, next) => {
       const { chatId } = req.params;
-      const messages = await messageController.getMessagesByChatId(
-        chatId.toString()
-      );
+      const messages = await messageController.getMessagesByChatId(chatId);
       res.status(200).json(messages);
     })
   );
@@ -20,7 +18,8 @@ export const messageRouter = (messageController: MessageController) => {
   router.post(
     "/",
     asyncErrorHandler(async (req, res, next) => {
-      const { senderId, chatId, body } = req.body;
+      const { chatId, body } = req.body;
+      const senderId = req.app.locals.userId;
       const newMessage = await messageController.createMessage(
         new Message({ senderId, chatId, body })
       );

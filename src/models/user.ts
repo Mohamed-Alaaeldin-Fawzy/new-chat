@@ -19,28 +19,28 @@ export class User {
     this.password = password;
     this.id = id;
   }
-  getName = () => {
+  getName = (): string => {
     return this.name;
   };
-  getPassword = () => {
+  getPassword = (): string => {
     return this.password;
   };
-  getEmail = () => {
+  getEmail = (): string => {
     return this.email;
   };
-  getId = () => {
+  getId = (): string => {
     return this.id;
   };
-  setName = (name: string) => {
+  setName = (name: string): void => {
     this.name = name;
   };
-  setPassword = (password: string) => {
+  setPassword = (password: string): void => {
     this.password = password;
   };
-  setEmail = (email: string) => {
+  setEmail = (email: string): void => {
     this.email = email;
   };
-  setId = (id: string) => {
+  setId = (id: string): void => {
     this.id = id;
   };
 }

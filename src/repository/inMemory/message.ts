@@ -1,5 +1,7 @@
 import { MessageRepository } from "../messageRepository";
-import { Message } from "../../model/messages";
+import { Message } from "../../models/messages";
+import { generateRandomNumber } from "../../util/getRandomNumber";
+import { NotFoundError } from "../../Error/notFoundError";
 export class InMemoryMessageRepository extends MessageRepository {
   private messages: Message[] = [];
   async getMessagesByChatId(chatId: string): Promise<Message[]> {
@@ -10,6 +12,7 @@ export class InMemoryMessageRepository extends MessageRepository {
   }
 
   async createMessage(message: Message): Promise<Message> {
+    message.setId(generateRandomNumber(10));
     this.messages.push(message);
     return message;
   }
@@ -18,9 +21,17 @@ export class InMemoryMessageRepository extends MessageRepository {
     const newMessages = this.messages.filter(
       (message) => message.getId() !== id
     );
+    if (newMessages.length === this.messages.length) {
+      throw new NotFoundError("Message not found");
+    }
     this.messages = newMessages;
   }
+
   async getMessageById(id: string): Promise<Message> {
-    return this.messages.find((message) => message.getId() === id);
+    const message = this.messages.find((message) => message.getId() === id);
+    if (!message) {
+      throw new NotFoundError("Message not found");
+    }
+    return message;
   }
 }

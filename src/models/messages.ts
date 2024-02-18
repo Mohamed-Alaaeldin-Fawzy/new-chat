@@ -21,35 +21,35 @@ export class Message {
     this.chatId = chatId;
   }
 
-  getId = () => {
+  getId = (): string => {
     return this.id;
   };
 
-  getBody = () => {
+  getBody = (): string => {
     return this.body;
   };
 
-  getSenderId = () => {
+  getSenderId = (): string => {
     return this.senderId;
   };
 
-  getChatId = () => {
+  getChatId = (): string => {
     return this.chatId;
   };
 
-  setId = (id: string) => {
+  setId = (id: string): void => {
     this.id = id;
   };
 
-  setBody = (body: string) => {
+  setBody = (body: string): void => {
     this.body = body;
   };
 
-  setSenderId = (senderId: string) => {
+  setSenderId = (senderId: string): void => {
     this.senderId = senderId;
   };
 
-  setChatId = (chatId: string) => {
+  setChatId = (chatId: string): void => {
     this.chatId = chatId;
   };
 }

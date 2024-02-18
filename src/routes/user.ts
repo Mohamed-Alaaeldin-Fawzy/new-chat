@@ -1,6 +1,6 @@
 import express from "express";
-import { UserController } from "../controller/user";
-import { User } from "model/user";
+import { UserController } from "../controllers/user";
+import { User } from "models/user";
 import { asyncErrorHandler } from "../util/asyncErrorHandler";
 
 const router = express.Router();
@@ -17,7 +17,7 @@ export const userRouter = (userController: UserController) => {
   router.get(
     "/me",
     asyncErrorHandler(async (req, res, next) => {
-      const { id } = req.app.locals.user;
+      const id = req.app.locals.userId;
       const user = await userController.getUserById(id);
       res.status(200).json(user);
     })

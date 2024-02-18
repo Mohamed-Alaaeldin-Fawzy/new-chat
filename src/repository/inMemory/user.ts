@@ -1,5 +1,7 @@
 import { UserRepository } from "../userRepository";
-import { User } from "../../model/user";
+import { User } from "../../models/user";
+import { generateRandomNumber } from "../../util/getRandomNumber";
+import { NotFoundError } from "../../Error/notFoundError";
 
 export class InMemoryUserRepository extends UserRepository {
   private users: User[] = [];
@@ -16,10 +18,15 @@ export class InMemoryUserRepository extends UserRepository {
   }
 
   async getUserById(id: string): Promise<User> {
-    return this.users.find((user) => user.getId() === id);
+    const user = this.users.find((user) => user.getId() === id);
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+    return user;
   }
 
   async createUser(user: User): Promise<User> {
+    user.setId(generateRandomNumber(10));
     this.users.push(user);
     return user;
   }
@@ -30,7 +37,7 @@ export class InMemoryUserRepository extends UserRepository {
 
     // If the user is not found, return null
     if (!userToUpdate) {
-      return null;
+      throw new NotFoundError("User not found");
     }
 
     // use Es6 spread operator to update the user properties
@@ -51,10 +58,17 @@ export class InMemoryUserRepository extends UserRepository {
 
   async getUserByEmail(email: string): Promise<User> {
     const user = this.users.find((u) => u.getEmail() === email);
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
     return user;
   }
+
   async deleteUser(id: string): Promise<void> {
     const newUsers = this.users.filter((u) => u.getId() !== id);
+    if (newUsers.length === this.users.length) {
+      throw new NotFoundError("User not found");
+    }
     this.users = newUsers;
   }
 }

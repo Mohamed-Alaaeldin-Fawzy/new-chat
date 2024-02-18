@@ -1,6 +1,6 @@
 import { UserRepository } from "../userRepository";
 import { User as UserSchema } from "./mongooseSchema/User";
-import { User } from "../../model/user";
+import { User } from "../../models/user";
 
 export class MongoUserRepository extends UserRepository {
   async createUser(user: User) {

@@ -1,28 +1,21 @@
 import { UserRepository } from "../repository/userRepository";
-import { User } from "../model/user";
+import { User } from "../models/user";
 import { NotFoundError } from "../Error/notFoundError";
 import { BadRequestError } from "../Error/badRequestError";
 
 export class UserController {
   constructor(public userRepository: UserRepository) {}
 
-  async getUsers() {
+  async getUsers(): Promise<User[]> {
     const users = await this.userRepository.getAllUsers();
-    if (!users) {
-      throw new NotFoundError("No users found");
-    }
     return users;
   }
 
-  async getUserById(id: string) {
+  async getUserById(id: string): Promise<User> {
     const user = await this.userRepository.getUserById(id);
-
-    if (!user) {
-      throw new NotFoundError("User not found");
-    }
     return user;
   }
-  async updateUser(id: string, user: User) {
+  async updateUser(id: string, user: User): Promise<User> {
     if (!user) {
       throw new BadRequestError("please provide the update values");
     }
@@ -36,7 +29,7 @@ export class UserController {
     }
     return newUser;
   }
-  async deleteUser(id: string) {
+  async deleteUser(id: string): Promise<void> {
     const existingUser = await this.userRepository.getUserById(id);
     if (!existingUser) {
       throw new NotFoundError("User not found");

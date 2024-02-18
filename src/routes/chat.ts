@@ -1,13 +1,13 @@
 import express from "express";
-import { ChatController } from "../controller/chat";
-import { Chat } from "../model/chat";
+import { ChatController } from "../controllers/chat";
+import { Chat } from "../models/chat";
 import { asyncErrorHandler } from "../util/asyncErrorHandler";
 
 const router = express.Router();
 
 export const chatRouter = (chatController: ChatController) => {
   router.get(
-    "/:id",
+    "/:userId",
     asyncErrorHandler(async (req, res, next) => {
       const userId = req.params.id;
       const chats = await chatController.getChatsByUserId(userId);
@@ -23,16 +23,6 @@ export const chatRouter = (chatController: ChatController) => {
         new Chat({ usersIds, name })
       );
       res.status(201).json(newChat);
-    })
-  );
-
-  router.put(
-    "/:id",
-    asyncErrorHandler(async (req, res, next) => {
-      const { id } = req.params;
-      const chat = req.body;
-      const updatedChat = await chatController.updateChat(id, chat);
-      res.status(200).json(updatedChat);
     })
   );
 

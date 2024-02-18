@@ -1,9 +1,8 @@
-import { User } from "../model/user";
+import { User } from "../models/user";
 import { UserRepository } from "../repository/userRepository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { BaseError } from "../Error/baseError";
-import { generateRandomNumber } from "../util/getRandomNumber";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -12,7 +11,7 @@ const jwtSecret = process.env.JWT_SECRET;
 
 export class AuthController {
   constructor(public userRepository: UserRepository) {}
-  async register(user: User) {
+  async register(user: User): Promise<User> {
     if (!user.getName() || !user.getEmail() || !user.getPassword()) {
       throw new BaseError("Missing required fields", 400);
     }
@@ -24,11 +23,19 @@ export class AuthController {
     }
     const hashedPassword = await bcrypt.hash(user.getPassword(), 10);
     user.setPassword(hashedPassword);
-    user.setId(generateRandomNumber(10));
     return await this.userRepository.createUser(user);
   }
 
-  async login({ email, password }: { email: string; password: string }) {
+  async login({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }): Promise<{
+    token: string;
+    user: User;
+  }> {
     if (!email || !password) {
       throw new BaseError("Missing required fields", 400);
     }
@@ -43,7 +50,8 @@ export class AuthController {
     if (!isPasswordValid) {
       throw new BaseError("Invalid password", 401);
     }
+    const user = await this.userRepository.getUserByEmail(email);
     const token = jwt.sign({ email, id: existingUser.getId() }, jwtSecret);
-    return { token };
+    return { token, user };
   }
 }

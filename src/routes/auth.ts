@@ -1,6 +1,6 @@
 import express from "express";
-import { User } from "../model/user";
-import { AuthController } from "../controller/auth";
+import { User } from "../models/user";
+import { AuthController } from "../controllers/auth";
 import { asyncErrorHandler } from "../util/asyncErrorHandler";
 
 export const router = express.Router();
@@ -29,8 +29,8 @@ export const authRouter = (authController: AuthController) => {
     "/login",
     asyncErrorHandler(async (req, res, next) => {
       const { email, password } = req.body;
-      const { token } = await authController.login({ email, password });
-      res.status(200).json({ success: true, token });
+      const { token, user } = await authController.login({ email, password });
+      res.status(200).json({ success: true, token, user });
     })
   );
   return router;

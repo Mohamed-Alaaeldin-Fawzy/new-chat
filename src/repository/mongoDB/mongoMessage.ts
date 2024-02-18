@@ -1,6 +1,6 @@
 import { MessageRepository } from "../messageRepository";
 import { Message as MessageSchema } from "./mongooseSchema/Message";
-import { Message } from "../../model/messages";
+import { Message } from "../../models/messages";
 export class MongoMessageRepository extends MessageRepository {
   async createMessage(message: Message): Promise<Message> {
     const newMessage = new MessageSchema(message);

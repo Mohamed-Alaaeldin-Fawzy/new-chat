@@ -1,6 +1,6 @@
 import { ChatRepository } from "repository/chatRepository";
 import { Chat as ChatSchema } from "./mongooseSchema/Chat";
-import { Chat } from "../../model/chat";
+import { Chat } from "../../models/chat";
 
 export class MongoChatRepository extends ChatRepository {
   async createChat(chat: Chat): Promise<Chat> {
