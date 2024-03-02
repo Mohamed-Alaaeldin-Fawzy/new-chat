@@ -2,6 +2,7 @@ import { MessageRepository } from "../messageRepository";
 import { Message } from "../../models/messages";
 import { generateRandomNumber } from "../../util/getRandomNumber";
 import { NotFoundError } from "../../Error/notFoundError";
+
 export class InMemoryMessageRepository extends MessageRepository {
   private messages: Message[] = [];
   async getMessagesByChatId(chatId: string): Promise<Message[]> {

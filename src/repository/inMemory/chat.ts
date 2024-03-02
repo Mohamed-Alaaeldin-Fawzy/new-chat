@@ -2,6 +2,7 @@ import { ChatRepository } from "../chatRepository";
 import { Chat } from "../../models/chat";
 import { generateRandomNumber } from "../../util/getRandomNumber";
 import { NotFoundError } from "../../Error/notFoundError";
+
 export class InMemoryChatRepository extends ChatRepository {
   private chats: Chat[] = [];
 
@@ -31,6 +32,7 @@ export class InMemoryChatRepository extends ChatRepository {
     }
     return null;
   }
+
   async getChatById(id: string): Promise<Chat> {
     const chat = this.chats.find((chat) => chat.getId() === id);
     if (!chat) {

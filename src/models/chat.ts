@@ -19,18 +19,23 @@ export class Chat {
   getName = (): string => {
     return this.name;
   };
+
   getUsersIds = (): string[] => {
     return this.usersIds;
   };
+
   getId = (): string => {
     return this.id;
   };
+
   setName = (name: string): void => {
     this.name = name;
   };
+
   setUsersIds = (usersIds: string[]): void => {
     this.usersIds = usersIds;
   };
+
   setId = (id: string): void => {
     this.id = id;
   };

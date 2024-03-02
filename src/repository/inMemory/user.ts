@@ -17,23 +17,32 @@ export class InMemoryUserRepository extends UserRepository {
     return users;
   }
 
-  async getUserById(id: string): Promise<User> {
+  async getUserById(id: string): Promise<Object> {
     const user = this.users.find((user) => user.getId() === id);
     if (!user) {
       throw new NotFoundError("User not found");
     }
-    return user;
+    return {
+      name: user.getName(),
+      email: user.getEmail(),
+      id: user.getId(),
+    };
   }
 
-  async createUser(user: User): Promise<User> {
+  async createUser(user: User): Promise<Object> {
+    console.log("creating user", user);
     if (!user.getId()) {
       user.setId(generateRandomNumber(10));
     }
     this.users.push(user);
-    return user;
+    return {
+      name: user.getName(),
+      email: user.getEmail(),
+      id: user.getId(),
+    };
   }
 
-  async updateUser(id: string, updatedUser: Partial<User>): Promise<User> {
+  async updateUser(id: string, updatedUser: Partial<User>): Promise<Object> {
     // Find the user based on the provided ID
     const userToUpdate = this.users.find((user) => user.getId() === id);
 
@@ -42,7 +51,6 @@ export class InMemoryUserRepository extends UserRepository {
       throw new NotFoundError("User not found");
     }
 
-    // use Es6 spread operator to update the user properties
     // Update the user properties with the provided values
     if (updatedUser.getName() !== undefined) {
       userToUpdate.setName(updatedUser.getName());
@@ -55,15 +63,20 @@ export class InMemoryUserRepository extends UserRepository {
     }
 
     // Return the updated user
-    return userToUpdate;
+    return {
+      name: userToUpdate.getName(),
+      email: userToUpdate.getEmail(),
+      id: userToUpdate.getId(),
+    };
   }
 
-  async getUserByEmail(email: string): Promise<User> {
+  async getUserByEmail(email: string): Promise<Object> {
     const user = this.users.find((u) => u.getEmail() === email);
-    if (!user) {
-      throw new NotFoundError("User not found");
-    }
-    return user;
+    return {
+      name: user?.getName(),
+      email: user?.getEmail(),
+      id: user?.getId(),
+    };
   }
 
   async deleteUser(id: string): Promise<void> {

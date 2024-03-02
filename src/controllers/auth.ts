@@ -3,6 +3,8 @@ import { UserRepository } from "../repository/userRepository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { BaseError } from "../Error/baseError";
+import { NotFoundError } from "../Error/notFoundError";
+import { BadRequestError } from "../Error/badRequestError";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -37,11 +39,11 @@ export class AuthController {
     user: User;
   }> {
     if (!email || !password) {
-      throw new BaseError("Missing required fields", 400);
+      throw new BadRequestError("Missing required fields");
     }
     const existingUser = await this.userRepository.getUserByEmail(email);
     if (!existingUser) {
-      throw new BaseError("User not found", 404);
+      throw new NotFoundError("User not found");
     }
     const isPasswordValid = await bcrypt.compare(
       password,

@@ -11,29 +11,35 @@ export class UserController {
     return users;
   }
 
-  async getUserById(id: string): Promise<User> {
+  async getUserById(id: string): Promise<Partial<User>> {
     const user = await this.userRepository.getUserById(id);
     return user;
   }
-  async updateUser(id: string, user: User): Promise<User> {
+
+  async updateUser(id: string, user: User): Promise<Partial<User>> {
     if (!user) {
       throw new BadRequestError("please provide the update values");
     }
+
     const existingUser = await this.userRepository.getUserById(id);
     if (!existingUser) {
       throw new NotFoundError("User not found");
     }
+
     const newUser = await this.userRepository.updateUser(id, user);
     if (!newUser) {
       throw new BadRequestError("Error while updating user");
     }
+
     return newUser;
   }
+
   async deleteUser(id: string): Promise<void> {
     const existingUser = await this.userRepository.getUserById(id);
     if (!existingUser) {
       throw new NotFoundError("User not found");
     }
+
     this.userRepository.deleteUser(id);
   }
 }
