@@ -1,4 +1,4 @@
-import { Message } from "../model/messages";
+import { Message } from "../models/messages";
 import { MessageRepository } from "../repository/messageRepository";
 import { NotFoundError } from "../Error/notFoundError";
 import { BadRequestError } from "../Error/badRequestError";
@@ -6,7 +6,7 @@ import { BadRequestError } from "../Error/badRequestError";
 export class MessageController {
   constructor(public messageRepository: MessageRepository) {}
 
-  async createMessage(message: Message) {
+  async createMessage(message: Message): Promise<Message> {
     if (!message) {
       throw new BadRequestError("Please provide a message");
     }
@@ -17,7 +17,7 @@ export class MessageController {
     return NewMessage;
   }
 
-  async getMessagesByChatId(chatId: string) {
+  async getMessagesByChatId(chatId: string): Promise<Message[]> {
     if (!chatId) {
       throw new BadRequestError("Please provide a chatId");
     }
@@ -28,7 +28,7 @@ export class MessageController {
     return messages;
   }
 
-  async deleteMessage(id: string) {
+  async deleteMessage(id: string): Promise<void> {
     const currentMessage = await this.messageRepository.getMessageById(id);
     if (!currentMessage) {
       throw new NotFoundError("Message not found");

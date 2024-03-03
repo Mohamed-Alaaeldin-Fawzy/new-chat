@@ -1,10 +1,12 @@
 import { ChatRepository } from "../chatRepository";
-import { Chat } from "../../model/chat";
-
+import { Chat } from "../../models/chat";
+import { generateRandomNumber } from "../../util/getRandomNumber";
+import { NotFoundError } from "../../Error/notFoundError";
 export class InMemoryChatRepository extends ChatRepository {
   private chats: Chat[] = [];
 
   async createChat(chat: Chat): Promise<Chat> {
+    chat.setId(generateRandomNumber(10));
     this.chats.push(chat);
     return chat;
   }
@@ -25,6 +27,10 @@ export class InMemoryChatRepository extends ChatRepository {
     return null;
   }
   async getChatById(id: string): Promise<Chat> {
-    return this.chats.find((chat) => chat.getId() === id);
+    const chat = this.chats.find((chat) => chat.getId() === id);
+    if (!chat) {
+      throw new NotFoundError("Chat not found");
+    }
+    return chat;
   }
 }

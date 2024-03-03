@@ -11,3 +11,15 @@
 <!-- abstract crud users -->
 
 -->
+
+<!--
+database related validation should be handeled in the repo instead of controller
+error handling func should take a cb and resolve or reject instead of try catch blocks
+middleware should be named isAuthenticated
+change baseError in auth
+
+ -->
+
+ <!-- 
+ rename the folder 
+  -->
