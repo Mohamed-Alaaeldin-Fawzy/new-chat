@@ -1,34 +1,55 @@
-import { UserRepository } from "../userRepository";
+import { UserRepository } from "../user";
 import { User as UserSchema } from "./mongooseSchema/User";
 import { User } from "../../models/user";
 
 export class MongoUserRepository extends UserRepository {
-  async createUser(user: User) {
-    const newUser = new UserSchema(user);
+  async createUser(user: User): Promise<User> {
+    const newUser = new UserSchema({
+      name: user.name,
+      email: user.email,
+      password: user.password,
+    });
+
     await newUser.save();
-    return user;
+
+    return new User({
+      id: newUser._id.toString(),
+      name: newUser.name,
+      email: newUser.email,
+      password: newUser.password,
+    });
   }
 
-  async getAllUsers() {
+  async getAllUsers(): Promise<Partial<User[]>> {
     const users = await UserSchema.find();
-    return users;
+    return users.map((user) => {
+      return new User({
+        id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+        password: user.password,
+      });
+    });
   }
 
   async getUserById(id: string): Promise<User> {
-    return await UserSchema.findById(id);
-  }
-
-  async updateUser(id: string, newUser: Partial<User>): Promise<User> {
-    const user = await UserSchema.findByIdAndUpdate(id, newUser, { new: true });
-    const transformedUser = new User(user);
-    return transformedUser;
+    const user = await UserSchema.findById(id);
+    return new User({
+      id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+    });
   }
 
   async getUserByEmail(email: string): Promise<User> {
-    return await UserSchema.findOne({ email });
-  }
-
-  async deleteUser(id: string): Promise<void> {
-    await UserSchema.findByIdAndDelete(id);
+    const user = await UserSchema.findOne({ email });
+    if (user !== null && user !== undefined) {
+      return new User({
+        id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+        password: user.password,
+      });
+    }
   }
 }

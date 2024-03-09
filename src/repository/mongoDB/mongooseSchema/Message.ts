@@ -6,12 +6,12 @@ const messageSchema = new mongoose.Schema({
     validate: [(name: string) => name.length > 0, "Name cannot be empty"],
   },
   senderId: {
-    type: [mongoose.Schema.Types.ObjectId],
+    type: mongoose.Schema.Types.ObjectId,
     required: [true, "Email is required"],
     ref: "User",
   },
   chatId: {
-    type: [mongoose.Schema.Types.ObjectId],
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: "Chat",
   },

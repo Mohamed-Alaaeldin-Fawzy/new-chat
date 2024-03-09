@@ -23,24 +23,5 @@ export const userRouter = (userController: UserController) => {
     })
   );
 
-  router.put(
-    "/:id",
-    asyncErrorHandler(async (req, res, next) => {
-      const { id } = req.params;
-      const newUser: User = req.body;
-      const user = await userController.updateUser(id, newUser);
-      res.status(200).json(user);
-    })
-  );
-
-  router.delete(
-    "/:id",
-    asyncErrorHandler(async (req, res, next) => {
-      const { id } = req.params;
-      await userController.deleteUser(id);
-      res.status(200).json({ success: true });
-    })
-  );
-
   return router;
 };

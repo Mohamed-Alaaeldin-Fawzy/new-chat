@@ -19,8 +19,10 @@ export const chatRouter = (chatController: ChatController) => {
     "/",
     asyncErrorHandler(async (req, res, next) => {
       const { usersIds, name } = req.body;
+      const userId = req.app.locals.userId;
       const newChat = await chatController.createChat(
-        new Chat({ usersIds, name })
+        new Chat({ usersIds, name }),
+        userId
       );
       res.status(201).json(newChat);
     })

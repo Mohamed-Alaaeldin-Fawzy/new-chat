@@ -16,8 +16,8 @@ export const authRouter = (authController: AuthController) => {
       res.status(201).json({
         success: true,
         user: {
-          name: user.getName(),
-          email: user.getEmail(),
+          name: user.name,
+          email: user.email,
         },
         token,
       });

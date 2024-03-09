@@ -1,6 +1,9 @@
 import { InMemoryUserRepository } from "./src/repository/inMemory/user";
+import { MongoUserRepository } from "./src/repository/mongoDB/user";
 import { InMemoryChatRepository } from "./src/repository/inMemory/chat";
+import { MongoChatRepository } from "./src/repository/mongoDB/chat";
 import { InMemoryMessageRepository } from "./src/repository/inMemory/message";
+import { MongoMessageRepository } from "./src/repository/mongoDB/message";
 import { User } from "./src/models/user";
 import { Chat } from "./src/models/chat";
 import { Message } from "./src/models/messages";

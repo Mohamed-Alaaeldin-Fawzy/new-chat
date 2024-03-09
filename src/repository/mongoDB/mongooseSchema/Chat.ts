@@ -5,11 +5,6 @@ const chatSchema = new mongoose.Schema({
     required: true,
     validate: [(name: string) => name.length > 0, "Name cannot be empty"],
   },
-  body: {
-    type: String,
-    required: [true, "Email is required"],
-    unique: [true, "User already exists"],
-  },
   usersIds: {
     type: [mongoose.Schema.Types.ObjectId],
     required: true,

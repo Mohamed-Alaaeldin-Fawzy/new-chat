@@ -1,8 +1,8 @@
 export class Message {
-  private id?: string;
-  private body: string;
-  private senderId: string;
-  private chatId: string;
+  private _id?: string;
+  private _body: string;
+  private _senderId: string;
+  private _chatId: string;
 
   constructor({
     id,
@@ -15,41 +15,41 @@ export class Message {
     senderId: string;
     chatId: string;
   }) {
-    this.id = id;
-    this.body = body;
-    this.senderId = senderId;
-    this.chatId = chatId;
+    this._id = id;
+    this._body = body;
+    this._senderId = senderId;
+    this._chatId = chatId;
   }
 
-  getId = (): string => {
-    return this.id;
-  };
+  get id(): string {
+    return this._id;
+  }
 
-  getBody = (): string => {
-    return this.body;
-  };
+  get body(): string {
+    return this._body;
+  }
 
-  getSenderId = (): string => {
-    return this.senderId;
-  };
+  get senderId(): string {
+    return this._senderId;
+  }
 
-  getChatId = (): string => {
-    return this.chatId;
-  };
+  get chatId(): string {
+    return this._chatId;
+  }
 
-  setId = (id: string): void => {
-    this.id = id;
-  };
+  set id(id: string) {
+    this._id = id;
+  }
 
-  setBody = (body: string): void => {
-    this.body = body;
-  };
+  set body(body: string) {
+    this._body = body;
+  }
 
-  setSenderId = (senderId: string): void => {
-    this.senderId = senderId;
-  };
+  set senderId(senderId: string) {
+    this._senderId = senderId;
+  }
 
-  setChatId = (chatId: string): void => {
-    this.chatId = chatId;
-  };
+  set chatId(chatId: string) {
+    this._chatId = chatId;
+  }
 }

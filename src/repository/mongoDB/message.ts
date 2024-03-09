@@ -1,9 +1,13 @@
-import { MessageRepository } from "../messageRepository";
+import { MessageRepository } from "../message";
 import { Message as MessageSchema } from "./mongooseSchema/Message";
 import { Message } from "../../models/messages";
 export class MongoMessageRepository extends MessageRepository {
   async createMessage(message: Message): Promise<Message> {
-    const newMessage = new MessageSchema(message);
+    const newMessage = new MessageSchema({
+      body: message.body,
+      senderId: message.senderId,
+      chatId: message.chatId,
+    });
     await newMessage.save();
     return message;
   }

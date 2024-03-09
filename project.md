@@ -29,7 +29,19 @@
 - vertical spacing between functions inside classes
 - incase of user not found in delete/put/get, error should be from the repository level (since it didn't do the function's job correctly)
 - message.setId(generateRandomNumber(10)) should be in the InmemoryRepo
-- In general (for manual validation specifically) it's best practice to know where is the error exaclty
-- getMessageById -> X
-
 - Add return types for all function
+
+<!-- new -->
+
+<!-- - check if user passed unwanted route like /jbcjaknc
+- types in errorhandler done
+  -POST message chatId should be in the params done -->
+
+- create chat users length to be at least one and current user must exist
+  -check the user object in user controller
+- in message controoler trim()
+    <!-- add validation for max chars -->
+  <!-- - seperate validation terms -->
+  <!-- - remove update chat -->
+  <!-- - getMessageById -> X -->
+  <!-- - In general (for manual validation specifically) it's best practice to know where is the error exaclty -->

@@ -1,4 +1,4 @@
-import { ChatRepository } from "../chatRepository";
+import { ChatRepository } from "../chat";
 import { Chat } from "../../models/chat";
 import { generateRandomNumber } from "../../util/getRandomNumber";
 import { NotFoundError } from "../../Error/notFoundError";
@@ -7,17 +7,15 @@ export class InMemoryChatRepository extends ChatRepository {
   private chats: Chat[] = [];
 
   async createChat(chat: Chat): Promise<Chat> {
-    if (!chat.getId()) {
-      chat.setId(generateRandomNumber(10));
+    if (!chat.id) {
+      chat.id = generateRandomNumber(10);
     }
     this.chats.push(chat);
     return chat;
   }
 
   async getChatsByUserId(id: string): Promise<Chat[]> {
-    const userChats = this.chats.filter((chat) =>
-      chat.getUsersIds().includes(id)
-    );
+    const userChats = this.chats.filter((chat) => chat.usersIds.includes(id));
     if (userChats.length === 0) {
       throw new NotFoundError("chat not found");
     }
@@ -25,7 +23,7 @@ export class InMemoryChatRepository extends ChatRepository {
   }
 
   async updateChat(id: string, chat: Chat): Promise<Chat> {
-    const chatIndex = this.chats.findIndex((chat) => chat.getId() === id);
+    const chatIndex = this.chats.findIndex((chat) => chat.id === id);
     if (chatIndex !== -1) {
       this.chats[chatIndex] = chat;
       return chat;
@@ -34,7 +32,7 @@ export class InMemoryChatRepository extends ChatRepository {
   }
 
   async getChatById(id: string): Promise<Chat> {
-    const chat = this.chats.find((chat) => chat.getId() === id);
+    const chat = this.chats.find((chat) => chat.id === id);
     if (!chat) {
       throw new NotFoundError("Chat not found");
     }

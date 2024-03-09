@@ -1,7 +1,7 @@
 export class Chat {
-  private name: string;
-  private usersIds: string[];
-  private id?: string;
+  private _name: string;
+  private _usersIds: string[];
+  private _id?: string;
   constructor({
     name,
     usersIds,
@@ -11,32 +11,32 @@ export class Chat {
     usersIds: string[];
     id?: string;
   }) {
-    this.name = name;
-    this.usersIds = usersIds;
-    this.id = id;
+    this._name = name;
+    this._usersIds = usersIds;
+    this._id = id;
   }
 
-  getName = (): string => {
-    return this.name;
-  };
+  get name(): string {
+    return this._name;
+  }
 
-  getUsersIds = (): string[] => {
-    return this.usersIds;
-  };
+  get usersIds(): string[] {
+    return this._usersIds;
+  }
 
-  getId = (): string => {
-    return this.id;
-  };
+  get id(): string {
+    return this._id;
+  }
 
-  setName = (name: string): void => {
-    this.name = name;
-  };
+  set name(name: string) {
+    this._name = name;
+  }
 
-  setUsersIds = (usersIds: string[]): void => {
-    this.usersIds = usersIds;
-  };
+  set usersIds(usersIds: string[]) {
+    this._usersIds = usersIds;
+  }
 
-  setId = (id: string): void => {
-    this.id = id;
-  };
+  set id(id: string) {
+    this._id = id;
+  }
 }

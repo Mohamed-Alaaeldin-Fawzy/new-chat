@@ -1,8 +1,9 @@
 export class User {
-  private name?: string;
-  private email: string;
-  private password?: string;
-  private id?: string;
+  private _name?: string;
+  private _email?: string;
+  private _password?: string;
+  private _id?: string;
+
   constructor({
     name,
     email,
@@ -11,7 +12,7 @@ export class User {
   }: {
     name?: string;
     email: string;
-    password: string;
+    password?: string;
     id?: string;
   }) {
     this.name = name;
@@ -20,35 +21,35 @@ export class User {
     this.id = id;
   }
 
-  getName = (): string => {
-    return this.name;
-  };
+  get name(): string {
+    return this._name;
+  }
 
-  getPassword = (): string => {
-    return this.password;
-  };
+  get email(): string {
+    return this._email;
+  }
 
-  getEmail = (): string => {
-    return this.email;
-  };
+  get password(): string {
+    return this._password;
+  }
 
-  getId = (): string => {
-    return this.id;
-  };
+  get id(): string {
+    return this._id;
+  }
 
-  setName = (name: string): void => {
-    this.name = name;
-  };
+  set name(name: string) {
+    this._name = name;
+  }
 
-  setPassword = (password: string): void => {
-    this.password = password;
-  };
+  set password(password: string) {
+    this._password = password;
+  }
 
-  setEmail = (email: string): void => {
-    this.email = email;
-  };
+  set id(id: string) {
+    this._id = id;
+  }
 
-  setId = (id: string): void => {
-    this.id = id;
-  };
+  set email(email: string) {
+    this._email = email;
+  }
 }

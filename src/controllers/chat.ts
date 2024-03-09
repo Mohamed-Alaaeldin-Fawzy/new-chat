@@ -1,44 +1,43 @@
-import { ChatRepository } from "../repository/chatRepository";
+import { ChatRepository } from "../repository/chat";
 import { Chat } from "../models/chat";
-import { NotFoundError } from "../Error/notFoundError";
 import { BadRequestError } from "../Error/badRequestError";
+import { chatSchema } from "../validation/chat";
 
 export class ChatController {
   constructor(public chatRepository: ChatRepository) {}
 
-  async getChatsByUserId(userId: string): Promise<Chat[]> {
+  async getChatsByUserId(userId: string): Promise<Object[]> {
     const chats = await this.chatRepository.getChatsByUserId(userId);
-    if (!chats) {
-      throw new NotFoundError("No chats found");
-    }
-    return chats;
+    return chats.map((chat) => {
+      return {
+        id: chat.id,
+        name: chat.name,
+        usersIds: chat.usersIds,
+      };
+    });
   }
 
-  async createChat(chat: Chat): Promise<Chat> {
-    if (!chat.getName() || !chat.getUsersIds()) {
-      throw new BadRequestError("Please provide a chat");
+  async createChat(chat: Chat, userId: string): Promise<Object> {
+    const chatError = chatSchema.validate({
+      name: chat.name,
+      usersIds: chat.usersIds,
+    });
+    if (chatError.error) {
+      throw new BadRequestError(chatError.error.message);
+    }
+    if (!chat.usersIds.includes(userId)) {
+      throw new BadRequestError("Can't create chat without you in it!!");
     }
 
-    const NewChat = await this.chatRepository.createChat(chat);
-    if (!NewChat) {
+    const newChat = await this.chatRepository.createChat(chat);
+    if (!newChat) {
       throw new BadRequestError("Error while creating chat");
     }
 
-    return NewChat;
-  }
-
-  async updateChat(id: string, chat: Chat): Promise<Chat> {
-    if (!chat) {
-      throw new BadRequestError("Please provide a chat");
-    }
-    const currentChat = await this.chatRepository.getChatById(id);
-    if (!currentChat) {
-      throw new NotFoundError("Chat not found");
-    }
-    const updatedChat = this.chatRepository.updateChat(id, chat);
-    if (!updatedChat) {
-      throw new BadRequestError("Error while updating chat");
-    }
-    return updatedChat;
+    return {
+      id: newChat.id,
+      name: newChat.name,
+      usersIds: newChat.usersIds,
+    };
   }
 }

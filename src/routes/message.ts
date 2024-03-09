@@ -16,23 +16,15 @@ export const messageRouter = (messageController: MessageController) => {
   );
 
   router.post(
-    "/",
+    "/:chatId",
     asyncErrorHandler(async (req, res, next) => {
-      const { chatId, body } = req.body;
+      const { body } = req.body;
+      const { chatId } = req.params;
       const senderId = req.app.locals.userId;
       const newMessage = await messageController.createMessage(
         new Message({ senderId, chatId, body })
       );
       res.status(201).json(newMessage);
-    })
-  );
-
-  router.delete(
-    "/:id",
-    asyncErrorHandler(async (req, res, next) => {
-      const { id } = req.params;
-      await messageController.deleteMessage(id);
-      res.sendStatus(204);
     })
   );
 
