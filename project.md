@@ -42,6 +42,23 @@
 - in message controoler trim()
     <!-- add validation for max chars -->
   <!-- - seperate validation terms -->
-  <!-- - remove update chat -->
   <!-- - getMessageById -> X -->
   <!-- - In general (for manual validation specifically) it's best practice to know where is the error exaclty -->
+
+- console.logs done
+- create chat contrller should only take one arg done
+- remove update chat done
+- register should return token and not envoke the login function done
+- new massage in messgae validation should be removed done
+- check all not found errors done
+- destructuring in the \_s done as much as i could
+- getchatbyuserid could return empty array done
+- make constants file for .env vars done
+- any string in the backend should have a max
+- body should have max string
+- try and catch in mongo done
+- remove transformed messages done
+- check if deleted in mongo done
+- readme how to test with mongodb done
+- check usersIds:id in chat
+- remove id in updates

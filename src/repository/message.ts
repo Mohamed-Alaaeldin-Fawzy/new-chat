@@ -1,7 +1,7 @@
 import { Message } from "../models/messages";
 
 export abstract class MessageRepository {
-  abstract createMessage(message: Message): Promise<Message>;
+  abstract createMessage(message: Partial<Message>): Promise<Partial<Message>>;
 
   abstract getMessagesByChatId(chatId: string): Promise<Message[]>;
 

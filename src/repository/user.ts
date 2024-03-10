@@ -5,7 +5,7 @@ export abstract class UserRepository {
 
   abstract getUserById(id: string): Promise<Partial<User>>;
 
-  abstract createUser(user: User): Promise<Partial<User>>;
+  abstract createUser(user: Partial<User>): Promise<Partial<User>>;
 
   abstract getUserByEmail(email: string): Promise<Partial<User>>;
 }

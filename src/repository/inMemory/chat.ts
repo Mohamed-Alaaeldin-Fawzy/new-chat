@@ -16,19 +16,7 @@ export class InMemoryChatRepository extends ChatRepository {
 
   async getChatsByUserId(id: string): Promise<Chat[]> {
     const userChats = this.chats.filter((chat) => chat.usersIds.includes(id));
-    if (userChats.length === 0) {
-      throw new NotFoundError("chat not found");
-    }
     return userChats;
-  }
-
-  async updateChat(id: string, chat: Chat): Promise<Chat> {
-    const chatIndex = this.chats.findIndex((chat) => chat.id === id);
-    if (chatIndex !== -1) {
-      this.chats[chatIndex] = chat;
-      return chat;
-    }
-    return null;
   }
 
   async getChatById(id: string): Promise<Chat> {

@@ -1,6 +1,5 @@
 import express from "express";
 import { UserController } from "../controllers/user";
-import { User } from "models/user";
 import { asyncErrorHandler } from "../util/asyncErrorHandler";
 
 const router = express.Router();

@@ -2,33 +2,39 @@ import { User } from "../models/user";
 import { UserRepository } from "../repository/user";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { BaseError } from "../Error/baseError";
 import { NotFoundError } from "../Error/notFoundError";
 import { BadRequestError } from "../Error/badRequestError";
-import dotenv from "dotenv";
+import { jwtSecret } from "../constants";
 import { loginSchema, registerSchema } from "../validation/auth";
-dotenv.config();
+import { validate } from "util/validate";
 
-const jwtSecret = process.env.JWT_SECRET;
+interface AuthReturnType {
+  token: string;
+  user: Partial<User>;
+}
 
 export class AuthController {
   constructor(public userRepository: UserRepository) {}
-  async register(user: User): Promise<Partial<User>> {
-    const registerError = registerSchema.validate({
-      name: user.name,
-      email: user.email,
-      password: user.password,
-    });
-    if (registerError.error) {
-      throw new BadRequestError(registerError.error.message);
-    }
-    const existingUser = await this.userRepository.getUserByEmail(user.email);
+
+  async register(user: User): Promise<AuthReturnType> {
+    const { name, email, password } = user;
+    validate(registerSchema, { name, email, password }, BadRequestError);
+
+    const existingUser = await this.userRepository.getUserByEmail(email);
     if (existingUser) {
-      throw new BaseError("User already exists", 400);
+      throw new BadRequestError("User already exists");
     }
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    user.password = hashedPassword;
-    return await this.userRepository.createUser(user);
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await this.userRepository.createUser({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    const token = jwt.sign({ email, id: newUser.id }, jwtSecret);
+
+    return { token, user: newUser };
   }
 
   async login({
@@ -37,29 +43,24 @@ export class AuthController {
   }: {
     email: string;
     password: string;
-  }): Promise<{
-    token: string;
-    user: Partial<User>;
-  }> {
-    const loginError = loginSchema.validate({ email, password });
-    if (loginError.error) {
-      throw new BadRequestError(loginError.error.message);
-    }
+  }): Promise<AuthReturnType> {
+    validate(loginSchema, { email, password }, BadRequestError);
 
     const existingUser = await this.userRepository.getUserByEmail(email);
-
     if (!existingUser) {
       throw new NotFoundError("User not found");
     }
+
     const isPasswordValid = await bcrypt.compare(
       password,
       existingUser.password
     );
     if (!isPasswordValid) {
-      throw new BaseError("Invalid password", 401);
+      throw new BadRequestError("Invalid password");
     }
-    const user = await this.userRepository.getUserByEmail(email);
+
     const token = jwt.sign({ email, id: existingUser.id }, jwtSecret);
-    return { token, user };
+
+    return { token, user: existingUser };
   }
 }

@@ -5,6 +5,7 @@ import { NotFoundError } from "../../Error/notFoundError";
 
 export class InMemoryMessageRepository extends MessageRepository {
   private messages: Message[] = [];
+
   async getMessagesByChatId(chatId: string): Promise<Message[]> {
     const messages = this.messages.filter(
       (message) => message.chatId === chatId
@@ -16,8 +17,7 @@ export class InMemoryMessageRepository extends MessageRepository {
     if (!message.id) {
       message.id = generateRandomNumber(10);
     }
-    console.log(message);
-    // console.log(this.messages);
+
     this.messages.push(message);
     return message;
   }

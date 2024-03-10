@@ -1,7 +1,5 @@
 import { UserRepository } from "../repository/user";
 import { User } from "../models/user";
-import { NotFoundError } from "../Error/notFoundError";
-import { BadRequestError } from "../Error/badRequestError";
 
 export class UserController {
   constructor(public userRepository: UserRepository) {}

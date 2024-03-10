@@ -21,8 +21,7 @@ export const chatRouter = (chatController: ChatController) => {
       const { usersIds, name } = req.body;
       const userId = req.app.locals.userId;
       const newChat = await chatController.createChat(
-        new Chat({ usersIds, name }),
-        userId
+        new Chat({ usersIds: [...usersIds, userId], name })
       );
       res.status(201).json(newChat);
     })
