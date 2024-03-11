@@ -11,3 +11,54 @@
 <!-- abstract crud users -->
 
 -->
+
+- Rename classes inside repository/inmemory to be directly chat.ts, user.ts etc..., same with mongoChat.ts => chat.ts, same mongoDBConnection => mongoDb
+- db env var is not needed
+- inMemoryMessageRepository => messageRepository
+- "/auth" => "/"
+- routes names should be all either singular or plural, convention leans towards model naming (singular) but still optional.
+- lets create /middleware(s) folder with isAuthenticated and errorHandler inside
+- AuthenticatedRequest is not needed, same as `req.user = `
+- Since we only use the id from the app.locals, we can change user => userId (same with the value)
+- in all repository's functions, take care not to return more than you need (ex: password)
+- chatId.toString() => chatId
+- POST /messages (we dont need to send senderId)
+- GET /chat/:id => /chatr/:userId",
+- PUT /chat/:id we can change the functions here to be updateChatUsers => on a second thought, it can be removed :D
+- UserController => getUsers: when can we have the `if (!users)` ? since it's always an array , same for getUserById
+- vertical spacing between functions inside classes
+- incase of user not found in delete/put/get, error should be from the repository level (since it didn't do the function's job correctly)
+- message.setId(generateRandomNumber(10)) should be in the InmemoryRepo
+- Add return types for all function
+
+<!-- new -->
+
+<!-- - check if user passed unwanted route like /jbcjaknc
+- types in errorhandler done
+  -POST message chatId should be in the params done -->
+
+- create chat users length to be at least one and current user must exist
+  -check the user object in user controller
+- in message controoler trim()
+    <!-- add validation for max chars -->
+  <!-- - seperate validation terms -->
+  <!-- - getMessageById -> X -->
+  <!-- - In general (for manual validation specifically) it's best practice to know where is the error exaclty -->
+
+- console.logs done
+- create chat contrller should only take one arg done
+- remove update chat done
+- register should return token and not envoke the login function done
+- new massage in messgae validation should be removed done
+- check all not found errors done
+- destructuring in the \_s done as much as i could
+- getchatbyuserid could return empty array done
+- make constants file for .env vars done
+- any string in the backend should have a max
+- body should have max string
+- try and catch in mongo done
+- remove transformed messages done
+- check if deleted in mongo done
+- readme how to test with mongodb done
+- check usersIds:id in chat
+- remove id in updates

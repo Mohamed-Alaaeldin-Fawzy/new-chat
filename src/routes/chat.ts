@@ -1,39 +1,31 @@
 import express from "express";
-import { ChatController } from "../controller/chat";
+import { ChatController } from "../controllers/chat";
+import { Chat } from "../models/chat";
+import { asyncErrorHandler } from "../util/asyncErrorHandler";
 
 const router = express.Router();
 
 export const chatRouter = (chatController: ChatController) => {
-  router.get("/", async (req, res, next) => {
-    try {
-      const userId = req.app.locals.user.id;
+  router.get(
+    "/",
+    asyncErrorHandler(async (req, res, next) => {
+      const userId = req.app.locals.userId;
       const chats = await chatController.getChatsByUserId(userId);
       res.status(200).json(chats);
-    } catch (error) {
-      next(error);
-    }
-  });
+    })
+  );
 
-  router.post("/", async (req, res, next) => {
-    try {
-      const chat = req.body;
-      const newChat = await chatController.createChat(chat);
+  router.post(
+    "/",
+    asyncErrorHandler(async (req, res, next) => {
+      const { usersIds, name } = req.body;
+      const userId = req.app.locals.userId;
+      const newChat = await chatController.createChat(
+        new Chat({ usersIds: [...usersIds, userId], name })
+      );
       res.status(201).json(newChat);
-    } catch (error) {
-      next(error);
-    }
-  });
-
-  router.put("/:id", async (req, res, next) => {
-    try {
-      const { id } = req.params;
-      const chat = req.body;
-      const updatedChat = await chatController.updateChat(id, chat);
-      res.status(200).json(updatedChat);
-    } catch (error) {
-      next(error);
-    }
-  });
+    })
+  );
 
   return router;
 };
