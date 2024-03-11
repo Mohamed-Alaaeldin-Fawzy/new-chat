@@ -52,8 +52,14 @@ connectToMongo();
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
 
+  socket.on("joinChat", (data) => {
+    socket.join(data);
+  });
+
   socket.on("sendMessage", (data) => {
-    socket.broadcast.emit("messageReceived", data);
+    socket
+      .to(data.messageObject.chatId)
+      .emit("messageReceived", data.messageObject);
   });
 
   socket.on("disconnect", () => {

@@ -6,7 +6,7 @@ import { NotFoundError } from "../Error/notFoundError";
 import { BadRequestError } from "../Error/badRequestError";
 import { jwtSecret } from "../constants";
 import { loginSchema, registerSchema } from "../validation/auth";
-import { validate } from "util/validate";
+import { validate } from "../util/validate";
 
 interface AuthReturnType {
   token: string;
@@ -21,11 +21,13 @@ export class AuthController {
     validate(registerSchema, { name, email, password }, BadRequestError);
 
     const existingUser = await this.userRepository.getUserByEmail(email);
+
     if (existingUser) {
       throw new BadRequestError("User already exists");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await this.userRepository.createUser({
       name,
       email,

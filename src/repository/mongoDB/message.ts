@@ -1,8 +1,8 @@
 import { MessageRepository } from "../message";
 import { Message as MessageSchema } from "./mongooseSchema/Message";
 import { Message } from "../../models/messages";
-import { DatabaseError } from "Error/DatabaseError";
-import { NotFoundError } from "Error/notFoundError";
+import { DatabaseError } from "../../Error/DatabaseError";
+import { NotFoundError } from "../../Error/notFoundError";
 export class MongoMessageRepository extends MessageRepository {
   async createMessage(message: Message): Promise<Message> {
     try {

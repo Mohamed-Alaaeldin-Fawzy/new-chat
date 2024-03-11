@@ -1,7 +1,7 @@
 import { ChatRepository } from "../chat";
 import { Chat as ChatSchema } from "./mongooseSchema/Chat";
 import { Chat } from "../../models/chat";
-import { DatabaseError } from "Error/DatabaseError";
+import { DatabaseError } from "../../Error/DatabaseError";
 
 export class MongoChatRepository extends ChatRepository {
   async createChat(chat: Chat): Promise<Chat> {

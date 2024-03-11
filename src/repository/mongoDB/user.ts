@@ -1,7 +1,7 @@
 import { UserRepository } from "../user";
 import { User as UserSchema } from "./mongooseSchema/User";
 import { User } from "../../models/user";
-import { DatabaseError } from "Error/DatabaseError";
+import { DatabaseError } from "../../Error/DatabaseError";
 
 export class MongoUserRepository extends UserRepository {
   async createUser({ name, email, password }: User): Promise<User> {
@@ -62,6 +62,7 @@ export class MongoUserRepository extends UserRepository {
         id: user._id.toString(),
         name: user.name,
         email: user.email,
+        password: user.password,
       });
     } catch (error) {
       throw new DatabaseError(error);

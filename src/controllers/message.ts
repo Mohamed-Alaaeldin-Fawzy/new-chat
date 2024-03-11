@@ -2,7 +2,7 @@ import { Message } from "../models/messages";
 import { MessageRepository } from "../repository/message";
 import { BadRequestError } from "../Error/badRequestError";
 import { messageSchema } from "../validation/message";
-import { validate } from "util/validate";
+import { validate } from "../util/validate";
 
 export class MessageController {
   constructor(public messageRepository: MessageRepository) {}

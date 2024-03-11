@@ -10,9 +10,10 @@ export const authRouter = (authController: AuthController) => {
     "/register",
     asyncErrorHandler(async (req, res, next) => {
       const { email, password, name } = req.body;
-      const user = new User({ name, email, password });
-      await authController.register(user);
-      const { token } = await authController.login({ email, password });
+      const { user, token } = await authController.register(
+        new User({ name, email, password })
+      );
+
       res.status(201).json({
         success: true,
         user: {
