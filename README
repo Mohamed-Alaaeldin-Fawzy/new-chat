@@ -47,7 +47,8 @@ This chat application allows users to engage in private conversations or create 
 ### Running the Application
 
 1. Start the application:
-2. The server will start on the specified port in the `.env` file, and you can begin interacting with the API.
+2. run `npm start` to start the app in development mode
+3. The server will start on the specified port in the `.env` file, and you can begin interacting with the API.
 
 ## API Endpoints
 

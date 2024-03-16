@@ -26,6 +26,9 @@ const userSchema = new mongoose.Schema({
       "Password must be between 1 and 100 characters",
     ],
   },
+  image: {
+    type: String,
+  },
 });
 
 export const User = mongoose.model("User", userSchema);

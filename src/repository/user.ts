@@ -8,4 +8,6 @@ export abstract class UserRepository {
   abstract createUser(user: Partial<User>): Promise<Partial<User>>;
 
   abstract getUserByEmail(email: string): Promise<Partial<User>>;
+
+  abstract updateUser(updatedUser: Partial<User>): Promise<Partial<User>>;
 }

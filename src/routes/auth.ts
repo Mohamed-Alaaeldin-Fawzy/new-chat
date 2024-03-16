@@ -19,6 +19,7 @@ export const authRouter = (authController: AuthController) => {
         user: {
           name: user.name,
           email: user.email,
+          image: user?.image,
         },
         token,
       });
@@ -30,7 +31,15 @@ export const authRouter = (authController: AuthController) => {
     asyncErrorHandler(async (req, res, next) => {
       const { email, password } = req.body;
       const { token, user } = await authController.login({ email, password });
-      res.status(200).json({ success: true, token, user });
+      res.status(200).json({
+        success: true,
+        token,
+        user: {
+          name: user.name,
+          email: user.email,
+          image: user?.image,
+        },
+      });
     })
   );
   return router;

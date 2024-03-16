@@ -4,7 +4,7 @@ import { generateRandomNumber } from "../../util/getRandomNumber";
 import { NotFoundError } from "../../Error/notFoundError";
 
 export class InMemoryUserRepository extends UserRepository {
-  private users: User[] = [];
+  private users: Partial<User[]> = [];
 
   async getAllUsers(): Promise<User[]> {
     const users = this.users.map(
@@ -45,5 +45,25 @@ export class InMemoryUserRepository extends UserRepository {
   async getUserByEmail(email: string): Promise<User> {
     const user = this.users.find((u) => u.email === email);
     return user;
+  }
+
+  async updateUser(updatedUser: Partial<User>): Promise<Partial<User>> {
+    const userToUpdateIndex = this.users.findIndex(
+      (user) => user.id === updatedUser.id
+    );
+    if (userToUpdateIndex === -1) {
+      throw new NotFoundError("User not found");
+    }
+
+    const userToUpdate = this.users[userToUpdateIndex];
+    const updatedUserData = {
+      ...userToUpdate,
+      ...updatedUser,
+    };
+
+    // @ts-ignore
+    this.users[userToUpdateIndex] = updatedUserData;
+
+    return updatedUserData;
   }
 }

@@ -18,6 +18,7 @@ export class MongoUserRepository extends UserRepository {
         id: newUser._id.toString(),
         name: newUser.name,
         email: newUser.email,
+        image: newUser?.image,
       });
     } catch (error) {
       throw new DatabaseError(error);
@@ -33,6 +34,7 @@ export class MongoUserRepository extends UserRepository {
             id: user._id.toString(),
             name: user.name,
             email: user.email,
+            image: user?.image,
           })
       );
     } catch (error) {
@@ -48,6 +50,7 @@ export class MongoUserRepository extends UserRepository {
         id: user._id.toString(),
         name: user.name,
         email: user.email,
+        image: user?.image,
       });
     } catch (error) {
       throw new DatabaseError(error);
@@ -63,6 +66,25 @@ export class MongoUserRepository extends UserRepository {
         name: user.name,
         email: user.email,
         password: user.password,
+        image: user?.image,
+      });
+    } catch (error) {
+      throw new DatabaseError(error);
+    }
+  }
+  async updateUser(updatedUser: Partial<User>): Promise<User> {
+    try {
+      const { id, ...update } = updatedUser;
+      const user = await UserSchema.findByIdAndUpdate(id, update, {
+        new: true,
+      });
+      if (!user) throw new Error("User not found");
+      return new User({
+        id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        image: user?.image,
       });
     } catch (error) {
       throw new DatabaseError(error);

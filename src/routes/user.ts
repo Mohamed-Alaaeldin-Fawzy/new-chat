@@ -22,5 +22,20 @@ export const userRouter = (userController: UserController) => {
     })
   );
 
+  router.put(
+    "/me",
+    asyncErrorHandler(async (req, res, next) => {
+      const { email, name, image } = req.body;
+      const id = req.app.locals.userId;
+      const newUser = await userController.updateUser({
+        email,
+        name,
+        image,
+        id,
+      });
+      res.status(200).json(newUser);
+    })
+  );
+
   return router;
 };

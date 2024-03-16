@@ -1,5 +1,5 @@
 export class Chat {
-  private _name: string;
+  private _name?: string;
   private _usersIds: string[];
   private _id?: string;
   constructor({
