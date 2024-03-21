@@ -49,8 +49,15 @@ app.use(cookieParser());
 
 connectToMongo();
 
+const onlineUsers = new Map();
+
 io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
+  const userId = socket.handshake.query.userId;
+
+  onlineUsers.set(userId, socket.id);
+
+  // Emit the updated list of online users
+  io.emit("online-users", Array.from(onlineUsers.keys()));
 
   socket.on("joinChat", (data) => {
     socket.join(data);
@@ -63,7 +70,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("a user disconnected", socket.id);
+    onlineUsers.delete(userId);
+    io.emit("online-users", Array.from(onlineUsers.keys()));
   });
 });
 

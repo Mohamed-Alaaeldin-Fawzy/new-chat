@@ -36,6 +36,5 @@ export const userRouter = (userController: UserController) => {
       res.status(200).json(newUser);
     })
   );
-
   return router;
 };

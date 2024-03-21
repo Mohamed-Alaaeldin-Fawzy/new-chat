@@ -28,6 +28,11 @@ export class UserController {
 
   async updateUser(newUser: Partial<User>): Promise<Partial<User>> {
     const updatedUser = await this.userRepository.updateUser(newUser);
-    return updatedUser;
+    return {
+      id: updatedUser.id,
+      email: updatedUser.email,
+      name: updatedUser.name,
+      image: updatedUser?.image,
+    };
   }
 }

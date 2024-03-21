@@ -2,6 +2,7 @@ import { UserRepository } from "../user";
 import { User as UserSchema } from "./mongooseSchema/User";
 import { User } from "../../models/user";
 import { DatabaseError } from "../../Error/DatabaseError";
+import { NotFoundError } from "../../Error/notFoundError";
 
 export class MongoUserRepository extends UserRepository {
   async createUser({ name, email, password }: User): Promise<User> {
@@ -78,7 +79,7 @@ export class MongoUserRepository extends UserRepository {
       const user = await UserSchema.findByIdAndUpdate(id, update, {
         new: true,
       });
-      if (!user) throw new Error("User not found");
+      if (!user) throw new NotFoundError("User not found");
       return new User({
         id: user._id.toString(),
         name: user.name,
